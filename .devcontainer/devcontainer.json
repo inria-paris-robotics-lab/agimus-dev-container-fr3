@@ -1,0 +1,56 @@
+{
+    "name": "gepetto-devcontainer",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": "."
+    },
+    "containerEnv": {
+        "DISPLAY": "${localEnv:DISPLAY}",
+        "QT_X11_NO_MITSHM": "1"
+    },
+    "remoteUser": "gepetto",
+    "privileged": true,
+    "mounts": [
+        {
+            "source": "${localWorkspaceFolder}/.devcontainer/scripts/build.sh",
+            "target": "/home/gepetto/ros2_ws/build.sh",
+            "type": "bind"
+        },
+        {
+            "source": "${localWorkspaceFolder}/.devcontainer/scripts/setup.sh",
+            "target": "/home/gepetto/ros2_ws/setup.sh",
+            "type": "bind"
+        }
+    ],
+    "workspaceFolder": "/home/gepetto/ros2_ws/src",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/gepetto/ros2_ws/src,type=bind,consistency=cached",
+    "runArgs": [
+        "--network=host",
+        "--ipc=host"
+    ],
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.profiles.linux": {
+                    "bash": {
+                        "path": "bash"
+                    }
+                },
+                "terminal.integrated.defaultProfile.linux": "bash"
+            },
+            "extensions": [
+                "ms-vscode.cpptools-extension-pack",
+                "ms-python.python",
+                "ms-python.black-formatter",
+                "ms-python.isort",
+                "ms-toolsai.jupyter",
+                "ms-iot.vscode-ros",
+                "redhat.vscode-yaml",
+                "redhat.vscode-xml",
+                "twxs.cmake",
+                "ajshort.msg",
+                "xaver.clang-format"
+            ]
+        }
+    }
+}
