@@ -5,4 +5,4 @@ cd /home/gepetto/ros2_ws
 colcon build \
         --symlink-install \
         --parallel-workers $(nproc) \
-        -Wall -Wextra -Wpedantic
+        --cmake-args -Wall -Wextra -Wpedantic

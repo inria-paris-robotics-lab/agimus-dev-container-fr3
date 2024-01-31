@@ -58,7 +58,7 @@ RUN groupadd --gid 1000 gepetto \
     && chmod 0440 /etc/sudoers.d/gepetto
 
 USER gepetto
-WORKDIR /home/gepetto
+WORKDIR /home/gepetto/ros2_ws
 
 ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 
