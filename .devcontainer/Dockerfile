@@ -50,7 +50,7 @@ RUN mkdir -p /etc/apt/keyrings \
     && curl http://robotpkg.openrobots.org/packages/debian/robotpkg.asc \
         | tee /etc/apt/keyrings/robotpkg.asc \
     && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/robotpkg.asc] http://robotpkg.openrobots.org/packages/debian/pub $(lsb_release -cs) robotpkg" \
-        | tee /etc/apt/sources.list.d/robotpkg.list   
+        | tee /etc/apt/sources.list.d/robotpkg.list
 
 ENV PATH=/opt/openrobots/bin:${PATH}
 ENV PKG_CONFIG_PATH=/opt/openrobots/lib/pkgconfig:${PKG_CONFIG_PATH}

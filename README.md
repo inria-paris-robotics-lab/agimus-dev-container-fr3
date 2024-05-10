@@ -32,7 +32,7 @@ The last option starts by clicking the green square with arrows in the lower-lef
 <div align="center">
   <p float="center">
     <img src="./resources/bottom_left.png" height="180" />
-    <img src="./resources/center_from_bottom_left.png" height="180" /> 
+    <img src="./resources/center_from_bottom_left.png" height="180" />
   </p>
 </div>
 
@@ -45,4 +45,3 @@ Inside the container in the main ROS workspace directory, there are scripts `set
 ## GPU support for rendering
 
 The dev container automatically sets up access to NVIDIA GPUs. Commands such as `nvidia-smi` are available and work as long as NVIDIA drivers are installed on the host system. For neural network inference everything should be automatic, yet for GUI applications additional variables are required. For more information see [devcontainer.json](./.devcontainer/devcontainer.json) file.
-
