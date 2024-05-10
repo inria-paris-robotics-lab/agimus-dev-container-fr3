@@ -1,17 +1,25 @@
 {
     "name": "gepetto-devcontainer",
+    // Uncomment ``build`` and comment out ``image`` to build from source
     // "build": {
     //     "dockerfile": "Dockerfile",
     //     "context": "."
     // },
     "image": "gitlab.laas.fr:4567/kwojciecho/gepetto-dev-container:humble",
+    // chmod is a dirty walkaround to a problem with access rights of the user in docker
+    "initializeCommand": "xhost +local:docker && sudo chmod 777 /dev/dri/*",
     "containerEnv": {
         "DISPLAY": "${localEnv:DISPLAY}",
         "QT_X11_NO_MITSHM": "1"
+        // Uncomment to enable GUI applications to be rendered with GPU
+        // "NVIDIA_DRIVER_CAPABILITIES": "all",
+        // "__NV_PRIME_RENDER_OFFLOAD": "1",
+        // "__GLX_VENDOR_LIBRARY_NAME": "nvidia"
     },
     "remoteUser": "gepetto",
     "privileged": true,
     "mounts": [
+        // Mount the workspace
         {
             "source": "${localWorkspaceFolder}/.devcontainer/scripts/build.sh",
             "target": "/home/gepetto/ros2_ws/build.sh",
@@ -21,7 +29,25 @@
             "source": "${localWorkspaceFolder}/.devcontainer/scripts/setup.sh",
             "target": "/home/gepetto/ros2_ws/setup.sh",
             "type": "bind"
+        },
+        // Enable sceen acess
+        {
+            "source": "/tmp/.X11-unix",
+            "target": "/tmp/.X11-unix",
+            "type": "bind"
+        },
+        {
+            "source": "${localEnv:XAUTHORITY}",
+            "target": "${localEnv:XAUTHORITY}",
+            "type": "bind"
+        },
+        // Presist bash history
+        {
+            "source": "${localWorkspaceFolderBasename}-bashhistory",
+            "target": "/commandhistory",
+            "type": "volume"
         }
+        
     ],
     "workspaceFolder": "/home/gepetto/ros2_ws/src",
     "workspaceMount": "source=${localWorkspaceFolder},target=/home/gepetto/ros2_ws/src,type=bind,consistency=cached",
@@ -29,6 +55,9 @@
         "--network=host",
         "--ipc=host"
     ],
+    "hostRequirements": {
+        "gpu": "optional" 
+    },
     "customizations": {
         "vscode": {
             "settings": {
@@ -50,7 +79,9 @@
                 "redhat.vscode-xml",
                 "twxs.cmake",
                 "ajshort.msg",
-                "xaver.clang-format"
+                "xaver.clang-format",
+                "njpwerner.autodocstring",
+                "cschlosser.doxdocgen"
             ]
         }
     }

@@ -5,13 +5,15 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "/usr/include/**",
-                "/opt/ros/${env:ROS_DISTRO}/include/**"
+                "/opt/ros/${env:ROS_DISTRO}/include/**",
+                "/opt/openrobots/include/**"
             ],
             "browse": {
                 "path": [
                     "${workspaceFolder}",
                     "/usr/include",
-                    "/opt/ros/${env:ROS_DISTRO}/include"
+                    "/opt/ros/${env:ROS_DISTRO}/include",
+                    "/opt/openrobots/include"
                 ]
             },
             "cppStandard": "c++17",
