@@ -9,6 +9,8 @@ This setup provides a devcontainer for ROS 2 Humble with predefined VS Code plug
 To start the devcontainer first install Docker following this [guide](https://docs.docker.com/engine/install/ubuntu/).
 Next, follow this [tutorial](https://docs.docker.com/engine/install/linux-postinstall/) on how to set up the access rights so `sudo` is no longer required to run docker.
 
+If you have NVIDIA GPU and want to use it withing the container install [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html).
+
 And finally install the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension in your VS Code.
 
 ## Start the devcontainer
