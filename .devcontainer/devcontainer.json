@@ -6,15 +6,15 @@
     //     "context": "."
     // },
     "image": "gitlab.laas.fr:4567/kwojciecho/gepetto-dev-container:humble",
-    // chmod is a dirty walkaround to a problem with access rights of the user in docker
-    "initializeCommand": "xhost +local:docker && sudo chmod 777 /dev/dri/*",
+    "initializeCommand": "xhost +local:docker",
     "containerEnv": {
         "DISPLAY": "${localEnv:DISPLAY}",
-        "QT_X11_NO_MITSHM": "1"
-        // Uncomment to enable GUI applications to be rendered with GPU
-        // "NVIDIA_DRIVER_CAPABILITIES": "all",
-        // "__NV_PRIME_RENDER_OFFLOAD": "1",
-        // "__GLX_VENDOR_LIBRARY_NAME": "nvidia"
+        "QT_X11_NO_MITSHM": "1",
+        // NVIDIA related ENV variables make no difference
+        // in case no discrete GPU is present in the system
+        "NVIDIA_DRIVER_CAPABILITIES": "all",
+        "__NV_PRIME_RENDER_OFFLOAD": "1",
+        "__GLX_VENDOR_LIBRARY_NAME": "nvidia"
     },
     "remoteUser": "gepetto",
     "privileged": true,
@@ -37,6 +37,11 @@
             "type": "bind"
         },
         {
+            "source": "/dev/dri",
+            "target": "/dev/dri",
+            "type": "bind"
+        },
+        {
             "source": "${localEnv:XAUTHORITY}",
             "target": "${localEnv:XAUTHORITY}",
             "type": "bind"
@@ -52,8 +57,8 @@
     "workspaceFolder": "/home/gepetto/ros2_ws/src",
     "workspaceMount": "source=${localWorkspaceFolder},target=/home/gepetto/ros2_ws/src,type=bind,consistency=cached",
     "runArgs": [
-        "--network=host",
-        "--ipc=host"
+        "--ipc=host",
+        "--net=host"
     ],
     "hostRequirements": {
         "gpu": "optional"
@@ -81,7 +86,8 @@
                 "ajshort.msg",
                 "xaver.clang-format",
                 "njpwerner.autodocstring",
-                "cschlosser.doxdocgen"
+                "cschlosser.doxdocgen",
+                "streetsidesoftware.code-spell-checker"
             ]
         }
     }
