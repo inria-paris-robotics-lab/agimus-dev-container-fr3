@@ -1,11 +1,11 @@
 {
     "name": "gepetto-devcontainer",
     // Uncomment ``build`` and comment out ``image`` to build from source
-    // "build": {
-    //     "dockerfile": "Dockerfile",
-    //     "context": "."
-    // },
-    "image": "gitlab.laas.fr:4567/kwojciecho/gepetto-dev-container:humble",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": "."
+    },
+    // "image": "gitlab.laas.fr:4567/kwojciecho/gepetto-dev-container:humble",
     "initializeCommand": "xhost +local:docker",
     "containerEnv": {
         "DISPLAY": "${localEnv:DISPLAY}",
