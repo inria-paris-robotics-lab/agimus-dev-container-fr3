@@ -105,17 +105,18 @@ RUN bash install_dependency.sh stack-of-tasks/eigenpy/v3.10.0/8 \
     # Remove example-robot-data source to shrink resulting Docker image
     && rm -rf /home/gepetto/dependencies/example-robot-data
 
-# Install HappyPose and PyM3T and download CosyPose models
+# Install HappyPose and PyM3T
 WORKDIR /tmp
 RUN git clone --branch dev --recurse-submodules https://github.com/agimus-project/happypose.git \
     && cd happypose \
-    && pip install ".[cpu,pypi,evaluation,multiview]" --extra-index-url https://download.pytorch.org/whl/cpu
+    && pip install ".[cpu,pypi,evaluation,multiview]" --extra-index-url https://download.pytorch.org/whl/cpu \
+    && pip install git+https://github.com/agimus-project/pym3t@master
 
+# Download CosyPose models
 WORKDIR /home/gepetto/happypose_data_dir
 ENV HAPPYPOSE_DATA_DIR=/home/gepetto/happypose_data_dir
-RUN pip install git+https://github.com/agimus-project/pym3t@master \
-    # Download YCBV pretrained models
-    && python -m happypose.toolbox.utils.download \
+# Download YCBV pretrained models
+RUN python -m happypose.toolbox.utils.download \
         --bop_dataset ycbv \
         --cosypose_models  \
             detector-bop-ycbv-pbr--970850 \
