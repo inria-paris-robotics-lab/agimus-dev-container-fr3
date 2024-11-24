@@ -17,7 +17,7 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
         clang \
         clang-format \
         cmake \
-        ninja \
+        ninja-build \
         gdb \
         git \
         htop \
