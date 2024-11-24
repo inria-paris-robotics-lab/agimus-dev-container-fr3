@@ -1,13 +1,13 @@
 build:
   image: docker
   rules:
-    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "humble"'
     # Temporary for coding week
+    # TODO NOT MERGE THIS FILE
     - if: '$CI_COMMIT_BRANCH == "humble-devel-coding-week-prague"'
   script:
     - DATE=$(date -d @1706538067 +"%d-%m-%Y")
-    - docker build -t "${CI_REGISTRY_IMAGE}:${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}-${DATE}"
-      -t "${CI_REGISTRY_IMAGE}:${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}" ./.devcontainer
+    - docker build -t "${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}-${DATE}"
+      -t "${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}" ./.devcontainer
     - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
-    - docker push "${CI_REGISTRY_IMAGE}:${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}-${DATE}"
-    - docker push "${CI_REGISTRY_IMAGE}:${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}"
+    - docker push "${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}-${DATE}"
+    - docker push "${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}"
