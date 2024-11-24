@@ -157,7 +157,7 @@ WORKDIR /home/gepetto/vision_deps_ws
 RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     --mount=type=cache,sharing=locked,target=/var/lib/apt \
     --mount=type=cache,sharing=locked,target=/root/.cache \
-    apt-get update \
+    sudo apt-get update \
     && mkdir src \
     && cd src \
     # Clone required repositories
