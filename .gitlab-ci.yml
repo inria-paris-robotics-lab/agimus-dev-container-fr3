@@ -1,7 +1,7 @@
 build:
   image: docker
   rules:
-    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "humble"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "humble-devel-coding-week-prague"'
   script:
     - DATE=$(date -d @1706538067 +"%d-%m-%Y")
     - docker build -t "${CI_REGISTRY_IMAGE}:${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}-${DATE}"
