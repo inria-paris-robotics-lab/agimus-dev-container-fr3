@@ -17,6 +17,7 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
         clang \
         clang-format \
         cmake \
+        ninja \
         gdb \
         git \
         htop \
@@ -74,6 +75,13 @@ ENV LD_LIBRARY_PATH=/opt/openrobots/lib:${LD_LIBRARY_PATH}
 ENV PYTHONPATH=/opt/openrobots/lib/python3.10/site-packages:${PYTHONPATH}
 ENV CMAKE_PREFIX_PATH=/opt/openrobots:${CMAKE_PREFIX_PATH}
 
+# Build libfranka
+RUN git clone -b 0.9.2 --recursive https://github.com/tingelst/libfranka \
+    && cmake -B build -S libfranka -DBUILD_TESTS=OFF \
+    && cmake --build build \
+    && cmake --install build \
+    && rm -rf libfranka build
+
 # Create the user
 RUN groupadd --gid 1000 gepetto \
     && useradd --uid 1000 --gid 1000 -m gepetto \
@@ -95,13 +103,13 @@ ENV CMAKE_CXX_FLAGS="-O3"
 # Install all dependencies up to Crocoddyl system-wise
 WORKDIR /home/gepetto/dependencies
 ADD install_dependency.sh /home/gepetto/dependencies/install_dependency.sh
-RUN bash install_dependency.sh stack-of-tasks/eigenpy/v3.10.0/8 \
-    && bash install_dependency.sh coal-library/coal/v3.0.0/20 \
-    && bash install_dependency.sh stack-of-tasks/pinocchio/v3.3.0/10 \
-    && bash install_dependency.sh gepetto/example-robot-data/v4.1.0/20 \
-    && bash install_dependency.sh loco-3d/crocoddyl/v2.1.0/20\
-    && bash install_dependency.sh machines-in-motion/mim_solvers/devel/20 \
-    && bash install_dependency.sh agimus-project/colmpc/main/20 \
+RUN bash install_dependency.sh stack-of-tasks/eigenpy/v3.10.0/4 \
+    && bash install_dependency.sh coal-library/coal/v3.0.0/10 \
+    && bash install_dependency.sh stack-of-tasks/pinocchio/v3.3.0/5 \
+    && bash install_dependency.sh gepetto/example-robot-data/v4.1.0/10 \
+    && bash install_dependency.sh loco-3d/crocoddyl/v2.1.0/10\
+    && bash install_dependency.sh machines-in-motion/mim_solvers/devel/10 \
+    && bash install_dependency.sh agimus-project/colmpc/main/10 \
     # Remove example-robot-data source to shrink resulting Docker image
     && rm -rf /home/gepetto/dependencies/example-robot-data
 
@@ -145,7 +153,7 @@ RUN python -m happypose.toolbox.utils.download \
     && rm *.zip
 
 # Install ROS dependencies for vision pipeline
-WORKDIR /home/gepetto/vision_deps
+WORKDIR /home/gepetto/vision_deps_ws
 RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     --mount=type=cache,sharing=locked,target=/var/lib/apt \
     --mount=type=cache,sharing=locked,target=/root/.cache \
@@ -180,10 +188,31 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
 ENV M3T_DATA_DIR=/home/gepetto/m3t_data_dir
 
 
+# Install ROS dependencies for Franka ROS
+WORKDIR /home/gepetto/franka_deps_ws
+RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
+    --mount=type=cache,sharing=locked,target=/var/lib/apt \
+    --mount=type=cache,sharing=locked,target=/root/.cache \
+    apt-get update \
+    && mkdir src \
+    && cd src \
+    # Clone required repositories
+    && git clone https://github.com/frankaemika/franka_ros2.git \
+    # Remplace new libfranka version with old one
+    && cd franka_ros2 \
+    && find . -type f -name 'CMakeLists.txt' | xargs sed -i 's/find_package(Franka 0.13.* REQUIRED)/find_package(Franka 0.9.3 REQUIRED)/' \
+    && cd ../.. \
+    # Build packages from source
+    && source /opt/ros/$ROS_DISTRO/setup.bash \
+    && rosdep update --rosdistro $ROS_DISTRO \
+    && rosdep install -y -i --from-paths src --rosdistro $ROS_DISTRO \
+    && colcon build --symlink-install
+
 ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /home/gepetto/.bashrc \
-    && echo "source /home/gepetto/vision_deps/install/setup.bash" >> /home/gepetto/.bashrc \
+    && echo "source /home/gepetto/vision_deps_ws/install/setup.bash" >> /home/gepetto/.bashrc \
+    && echo "source /home/gepetto/franka_deps_ws/install/setup.bash" >> /home/gepetto/.bashrc \
     && echo "source /home/gepetto/ros2_ws/install/setup.bash" >> /home/gepetto/.bashrc \
     && echo "source /usr/share/ignition/setup.sh" >> /home/gepetto/.bashrc \
     && echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> /home/gepetto/.bashrc
