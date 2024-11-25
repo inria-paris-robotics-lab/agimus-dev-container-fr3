@@ -205,7 +205,7 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     # Build packages from source
     && source /opt/ros/$ROS_DISTRO/setup.bash \
     && rosdep update --rosdistro $ROS_DISTRO \
-    && rosdep install -y -i --from-paths src --rosdistro $ROS_DISTRO \
+    && rosdep install -y -i --from-paths src --rosdistro $ROS_DISTRO --skip-keys libfranka \
     && colcon build --symlink-install
 
 ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
