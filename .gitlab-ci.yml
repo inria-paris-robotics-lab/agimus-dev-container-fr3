@@ -1,4 +1,5 @@
 build:
+  timeout: 7 hours 01 minutes
   image: docker
   rules:
     # Temporary for coding week
