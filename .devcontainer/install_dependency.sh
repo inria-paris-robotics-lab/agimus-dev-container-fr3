@@ -10,7 +10,7 @@ PRJ="${split[1]}"
 TAG="${split[2]}"
 CORES="${split[3]}"
 
-git clone --branch "$TAG" --depth 1 "https://github.com/$ORG/$PRJ"
+git clone --branch "$TAG" --recursive "https://github.com/$ORG/$PRJ"
 cmake -B "$PRJ/build" -S "$PRJ" \
     -DCMAKE_INSTALL_LIBDIR=lib \
     -DBUILD_TESTING=OFF \
@@ -23,6 +23,8 @@ cmake -B "$PRJ/build" -S "$PRJ" \
     -DCOAL_BACKWARD_COMPATIBILITY_WITH_HPP_FCL=ON \
     -DCOAL_HAS_QHULL=ON \
     -DBUILD_WITH_COLLISION_SUPPORT=ON \
+    -DPROJECT_USE_QT4=OFF \
+    -DUSE_QPOASES=OFF \
     -Wno-dev
 cmake --build "$PRJ/build" -j $CORES
 sudo cmake --build "$PRJ/build" -t install
