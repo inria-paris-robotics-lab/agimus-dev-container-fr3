@@ -272,3 +272,5 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
 RUN bash install_dependency.sh humanoid-path-planner/hpp-plot/master/4
 RUN bash install_dependency.sh humanoid-path-planner/hpp-gui/master/4
 RUN bash install_dependency.sh florent-lamiraux/hpp-bin-picking/devel/4
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
+ENV AMENT_PREFIX_PATH=/usr/local
