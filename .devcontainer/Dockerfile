@@ -245,22 +245,22 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     robotpkg-qpoases robotpkg-qt5-osgqt
 
 WORKDIR /home/gepetto/dependencies
-RUN bash install_dependency.sh humanoid-path-planner/hpp-util/master/1
-RUN bash install_dependency.sh humanoid-path-planner/hpp-template-corba/master/1
-RUN bash install_dependency.sh humanoid-path-planner/hpp-statistics/master/1
-RUN bash install_dependency.sh humanoid-path-planner/hpp-environments/master/4
-RUN bash install_dependency.sh humanoid-path-planner/hpp-pinocchio/master/4
-RUN bash install_dependency.sh humanoid-path-planner/hpp-constraints/master/4
+RUN bash install_dependency.sh humanoid-path-planner/hpp-util/devel/1
+RUN bash install_dependency.sh humanoid-path-planner/hpp-template-corba/devel/1
+RUN bash install_dependency.sh humanoid-path-planner/hpp-statistics/devel/1
+RUN bash install_dependency.sh humanoid-path-planner/hpp-environments/devel/4
+RUN bash install_dependency.sh humanoid-path-planner/hpp-pinocchio/devel/4
+RUN bash install_dependency.sh humanoid-path-planner/hpp-constraints/devel/4
 ENV CMAKE_FLAGS="-DCMAKE_INSTALL_LIBDIR=lib -DBUILD_TESTING=OFF -DBUILD_BENCHMARK=OFF -DBUILD_BENCHMARKS=OFF -DBUILD_EXAMPLES=OFF -DINSTALL_DOCUMENTATION=OFF -DBUILD_PYTHON_INTERFACE=OFF -DGENERATE_PYTHON_STUBS=OFF -DCOAL_BACKWARD_COMPATIBILITY_WITH_HPP_FCL=ON -DCOAL_HAS_QHULL=ON -DBUILD_WITH_COLLISION_SUPPORT=ON -DPROJECT_USE_QT4=OFF -DUSE_QPOASES=OFF -DBUILD_WITH_VECTORIZATION_SUPPORT=OFF"
-RUN bash install_dependency.sh Simple-Robotics/proxsuite/v0.6.5/4
-RUN bash install_dependency.sh humanoid-path-planner/hpp-core/master/4
-RUN bash install_dependency.sh humanoid-path-planner/hpp-corbaserver/master/4
-RUN bash install_dependency.sh humanoid-path-planner/hpp-manipulation/master/4
-RUN bash install_dependency.sh humanoid-path-planner/hpp-manipulation-urdf/master/4
-RUN bash install_dependency.sh humanoid-path-planner/hpp-manipulation-corba/master/4
-RUN bash install_dependency.sh florent-lamiraux/gepetto-viewer/devel/4
-RUN bash install_dependency.sh humanoid-path-planner/gepetto-viewer-corba/master/4
-RUN bash install_dependency.sh humanoid-path-planner/hpp-gepetto-viewer/master/4
+RUN bash install_dependency.sh Simple-Robotics/proxsuite/devel/4
+RUN bash install_dependency.sh humanoid-path-planner/hpp-core/devel/4
+RUN bash install_dependency.sh humanoid-path-planner/hpp-corbaserver/devel/4
+RUN bash install_dependency.sh humanoid-path-planner/hpp-manipulation/devel/4
+RUN bash install_dependency.sh humanoid-path-planner/hpp-manipulation-urdf/devel/4
+RUN bash install_dependency.sh humanoid-path-planner/hpp-manipulation-corba/devel/4
+RUN bash install_dependency.sh humanoid-path-planner/gepetto-viewer/devel/4
+RUN bash install_dependency.sh humanoid-path-planner/gepetto-viewer-corba/devel/4
+RUN bash install_dependency.sh humanoid-path-planner/hpp-gepetto-viewer/devel/4
 
 RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     --mount=type=cache,sharing=locked,target=/var/lib/apt \
@@ -269,8 +269,8 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     && sudo apt-get upgrade -y \
     && sudo apt-get install -qqy --no-install-recommends \
     robotpkg-qt5-qgv
-RUN bash install_dependency.sh humanoid-path-planner/hpp-plot/master/4
-RUN bash install_dependency.sh humanoid-path-planner/hpp-gui/master/4
+RUN bash install_dependency.sh humanoid-path-planner/hpp-plot/devel/4
+RUN bash install_dependency.sh humanoid-path-planner/hpp-gui/devel/4
 RUN bash install_dependency.sh florent-lamiraux/hpp-bin-picking/devel/4
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 ENV AMENT_PREFIX_PATH=/usr/local
