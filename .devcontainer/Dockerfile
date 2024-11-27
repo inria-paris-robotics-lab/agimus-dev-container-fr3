@@ -102,10 +102,11 @@ ENV CMAKE_CXX_FLAGS="-O3"
 
 # Install all dependencies up to Crocoddyl system-wise
 WORKDIR /home/gepetto/dependencies
+ENV CMAKE_FLAGS="-DCMAKE_INSTALL_LIBDIR=lib -DBUILD_TESTING=OFF -DBUILD_BENCHMARK=OFF -DBUILD_BENCHMARKS=OFF -DBUILD_EXAMPLES=OFF -DINSTALL_DOCUMENTATION=OFF -DBUILD_PYTHON_INTERFACE=ON -DGENERATE_PYTHON_STUBS=OFF -DCOAL_BACKWARD_COMPATIBILITY_WITH_HPP_FCL=ON -DCOAL_HAS_QHULL=ON -DBUILD_WITH_COLLISION_SUPPORT=ON -DPROJECT_USE_QT4=OFF -DUSE_QPOASES=OFF"
 ADD install_dependency.sh /home/gepetto/dependencies/install_dependency.sh
 RUN bash install_dependency.sh stack-of-tasks/eigenpy/v3.10.0/4 \
     && bash install_dependency.sh coal-library/coal/v3.0.0/10 \
-    && bash install_dependency.sh stack-of-tasks/pinocchio/v3.3.0/5 \
+    && bash install_dependency.sh stack-of-tasks/pinocchio/v3.0.0/5 \
     && bash install_dependency.sh gepetto/example-robot-data/v4.1.0/10 \
     && bash install_dependency.sh loco-3d/crocoddyl/v2.1.0/10\
     && bash install_dependency.sh machines-in-motion/mim_solvers/devel/10 \
@@ -251,14 +252,14 @@ RUN bash install_dependency.sh humanoid-path-planner/hpp-environments/master/4
 RUN bash install_dependency.sh humanoid-path-planner/hpp-pinocchio/master/4
 RUN bash install_dependency.sh humanoid-path-planner/hpp-constraints/master/4
 ENV CMAKE_FLAGS="-DCMAKE_INSTALL_LIBDIR=lib -DBUILD_TESTING=OFF -DBUILD_BENCHMARK=OFF -DBUILD_BENCHMARKS=OFF -DBUILD_EXAMPLES=OFF -DINSTALL_DOCUMENTATION=OFF -DBUILD_PYTHON_INTERFACE=OFF -DGENERATE_PYTHON_STUBS=OFF -DCOAL_BACKWARD_COMPATIBILITY_WITH_HPP_FCL=ON -DCOAL_HAS_QHULL=ON -DBUILD_WITH_COLLISION_SUPPORT=ON -DPROJECT_USE_QT4=OFF -DUSE_QPOASES=OFF -DBUILD_WITH_VECTORIZATION_SUPPORT=OFF"
-ADD install_dependency-1.sh /home/gepetto/dependencies/install_dependency.sh
 RUN bash install_dependency.sh Simple-Robotics/proxsuite/v0.6.5/4
 RUN bash install_dependency.sh humanoid-path-planner/hpp-core/master/4
 RUN bash install_dependency.sh humanoid-path-planner/hpp-corbaserver/master/4
 RUN bash install_dependency.sh humanoid-path-planner/hpp-manipulation/master/4
 RUN bash install_dependency.sh humanoid-path-planner/hpp-manipulation-urdf/master/4
 RUN bash install_dependency.sh humanoid-path-planner/hpp-manipulation-corba/master/4
-RUN bash install_dependency.sh humanoid-path-planner/gepetto-viewer/master/4
+RUN bash install_dependency.sh florent-lamiraux/gepetto-viewer/devel/4
+RUN bash install_dependency.sh florent-lamiraux/hpp_benchmark/devel/1
 RUN bash install_dependency.sh humanoid-path-planner/gepetto-viewer-corba/master/4
 RUN bash install_dependency.sh humanoid-path-planner/hpp-gepetto-viewer/master/4
 
