@@ -265,5 +265,9 @@ RUN bash install_dependency.sh humanoid-path-planner/hpp-gepetto-viewer/devel/4
 RUN bash install_dependency.sh humanoid-path-planner/hpp-plot/devel/4
 RUN bash install_dependency.sh humanoid-path-planner/hpp-gui/devel/4
 RUN bash install_dependency.sh florent-lamiraux/hpp-bin-picking/devel/4
+
+ENV PATH=/usr/local/bin:${PATH}
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
+ENV PYTHONPATH=/usr/local/lib/python3.10/site-packages:${PYTHONPATH}
+ENV CMAKE_PREFIX_PATH=/usr/local:${CMAKE_PREFIX_PATH}
 ENV AMENT_PREFIX_PATH=/usr/local
