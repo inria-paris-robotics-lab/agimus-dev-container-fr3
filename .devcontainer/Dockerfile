@@ -105,8 +105,8 @@ WORKDIR /home/gepetto/dependencies
 ENV CMAKE_FLAGS="-DCMAKE_INSTALL_LIBDIR=lib -DBUILD_TESTING=OFF -DBUILD_BENCHMARK=OFF -DBUILD_BENCHMARKS=OFF -DBUILD_EXAMPLES=OFF -DINSTALL_DOCUMENTATION=OFF -DBUILD_PYTHON_INTERFACE=ON -DGENERATE_PYTHON_STUBS=OFF -DCOAL_BACKWARD_COMPATIBILITY_WITH_HPP_FCL=ON -DCOAL_HAS_QHULL=ON -DBUILD_WITH_COLLISION_SUPPORT=ON -DPROJECT_USE_QT4=OFF -DUSE_QPOASES=OFF"
 ADD install_dependency.sh /home/gepetto/dependencies/install_dependency.sh
 RUN bash install_dependency.sh stack-of-tasks/eigenpy/v3.10.0/4
-RUN bash install_dependency.sh florent-lamiraux/hpp-fcl/acw/10
-RUN bash install_dependency.sh stack-of-tasks/pinocchio/v3.1.0/5
+RUN bash install_dependency.sh coal-library/coal/v3.0.0/10
+RUN bash install_dependency.sh stack-of-tasks/pinocchio/v3.3.0/5
 RUN bash install_dependency.sh gepetto/example-robot-data/v4.1.0/10
 RUN bash install_dependency.sh loco-3d/crocoddyl/v2.1.0/10
 RUN bash install_dependency.sh machines-in-motion/mim_solvers/devel/10
