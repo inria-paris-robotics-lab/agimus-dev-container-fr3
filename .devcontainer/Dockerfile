@@ -242,7 +242,7 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     && sudo apt-get install -qqy --no-install-recommends \
     robotpkg-collada-dom robotpkg-omniorb robotpkg-openscenegraph \
     robotpkg-py310-omniorbpy robotpkg-py310-ros-catkin \
-    robotpkg-qpoases robotpkg-qt5-osgqt
+    robotpkg-qpoases robotpkg-qt5-osgqt robotpkg-qt5-qgv
 
 WORKDIR /home/gepetto/dependencies
 RUN bash install_dependency.sh humanoid-path-planner/hpp-util/devel/1
@@ -262,13 +262,6 @@ RUN bash install_dependency.sh humanoid-path-planner/gepetto-viewer/devel/4
 RUN bash install_dependency.sh humanoid-path-planner/gepetto-viewer-corba/devel/4
 RUN bash install_dependency.sh humanoid-path-planner/hpp-gepetto-viewer/devel/4
 
-RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
-    --mount=type=cache,sharing=locked,target=/var/lib/apt \
-    --mount=type=cache,sharing=locked,target=/root/.cache \
-    sudo apt-get update \
-    && sudo apt-get upgrade -y \
-    && sudo apt-get install -qqy --no-install-recommends \
-    robotpkg-qt5-qgv
 RUN bash install_dependency.sh humanoid-path-planner/hpp-plot/devel/4
 RUN bash install_dependency.sh humanoid-path-planner/hpp-gui/devel/4
 RUN bash install_dependency.sh florent-lamiraux/hpp-bin-picking/devel/4
