@@ -1,0 +1,11 @@
+from gitlab.laas.fr:4567/agimus-project/agimus_dev_container:humble-devel-coding-week-prague
+
+RUN cd hpp-corbaserver && \
+    git remote add florent https://github.com/florent-lamiraux/hpp-corbaserver \
+    && git fetch florent && git merge florent/devel && cd build && \
+    sudo make install
+
+# Install franka_description from source.
+RUN sudo apt remove -y ros-humble-franka-description
+RUN source /opt/ros/humble/setup.bash && \
+    bash install_dependency.sh agimus-project/franka_description/humble_devel/1
