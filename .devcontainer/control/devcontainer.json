@@ -1,0 +1,89 @@
+{
+    "name": "gepetto-devcontainer",
+    // Uncomment ``build`` and comment out ``image`` to build from source
+    // "build": {
+    //     "dockerfile": "Dockerfile",
+    //     "context": "."
+    // },
+    "image": "gitlab.laas.fr:4567/agimus-project/agimus_dev_container:humble-devel-control",
+    "initializeCommand": "xhost +local:docker",
+    "containerEnv": {
+        "DISPLAY": "${localEnv:DISPLAY}",
+        "QT_X11_NO_MITSHM": "1",
+        // NVIDIA related ENV variables make no difference
+        // in case no discrete GPU is present in the system
+        "NVIDIA_DRIVER_CAPABILITIES": "all",
+        "__NV_PRIME_RENDER_OFFLOAD": "1",
+        "__GLX_VENDOR_LIBRARY_NAME": "nvidia"
+    },
+    "remoteUser": "gepetto",
+    "privileged": true,
+    "mounts": [
+        // Mount the workspace
+        {
+            "source": "${localWorkspaceFolder}/.devcontainer/scripts/build.sh",
+            "target": "/home/gepetto/ros2_ws/build.sh",
+            "type": "bind"
+        },
+        {
+            "source": "${localWorkspaceFolder}/.devcontainer/scripts/setup.sh",
+            "target": "/home/gepetto/ros2_ws/setup.sh",
+            "type": "bind"
+        },
+        // Enable sceen acess
+        {
+            "source": "/tmp/.X11-unix",
+            "target": "/tmp/.X11-unix",
+            "type": "bind"
+        },
+        {
+            "source": "/dev/dri",
+            "target": "/dev/dri",
+            "type": "bind"
+        },
+        // Presist bash history
+        {
+            "source": "${localWorkspaceFolderBasename}-bashhistory",
+            "target": "/commandhistory",
+            "type": "volume"
+        }
+
+    ],
+    "workspaceFolder": "/home/gepetto/ros2_ws/src",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/gepetto/ros2_ws/src,type=bind,consistency=cached",
+    "runArgs": [
+        "--ipc=host",
+        "--net=host"
+    ],
+    "hostRequirements": {
+        "gpu": "optional"
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.profiles.linux": {
+                    "bash": {
+                        "path": "bash"
+                    }
+                },
+                "terminal.integrated.defaultProfile.linux": "bash"
+            },
+            "extensions": [
+                "ms-vscode.cpptools-extension-pack",
+                "ms-python.python",
+                "ms-python.black-formatter",
+                "ms-python.isort",
+                "ms-toolsai.jupyter",
+                "ms-iot.vscode-ros",
+                "redhat.vscode-yaml",
+                "redhat.vscode-xml",
+                "twxs.cmake",
+                "ajshort.msg",
+                "xaver.clang-format",
+                "njpwerner.autodocstring",
+                "cschlosser.doxdocgen",
+                "streetsidesoftware.code-spell-checker"
+            ]
+        }
+    }
+}
