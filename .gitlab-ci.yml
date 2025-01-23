@@ -60,9 +60,11 @@ build-control-image:
 build-cpu-vision-image:
   extends: .build-vision-image
   variables:
+    IMAGE_NAME: vision
     HAPPYPOSE_INSTALL_TYPE: cpu
 
 build-cuda-vision-image:
   extends: .build-vision-image
   variables:
+    IMAGE_NAME: vision-cuda
     HAPPYPOSE_INSTALL_TYPE: cu124
