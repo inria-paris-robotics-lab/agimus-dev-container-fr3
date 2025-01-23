@@ -1,6 +1,8 @@
-#!/bin/bash -eux
+#!/bin/bash
 
-CMAKE_PREFIX_PATH=${1:-$PWD/install}
+set -eux
+
+CMAKE_PREFIX_PATH=${1:--$PWD/install}
 
 export CMAKE_PREFIX_PATH
 

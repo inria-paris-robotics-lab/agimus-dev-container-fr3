@@ -24,13 +24,11 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
         libsimde-dev \
         libmatio-dev \
         # HPP dependencies
-        omniidl \
         libomniorb4-dev \
         robotpkg-collada-dom \
         robotpkg-omniorb \
         robotpkg-openscenegraph \
         robotpkg-py310-omniorbpy \
-        robotpkg-py310-ros-catkin \
         robotpkg-qpoases \
         robotpkg-qt5-osgqt \
         robotpkg-qt5-qgv
@@ -49,7 +47,8 @@ RUN bash install_dependency.sh stack-of-tasks/eigenpy/v3.10.0/1 \
     && bash install_dependency.sh coal-library/coal/v3.0.0/1 \
     && bash install_dependency.sh stack-of-tasks/pinocchio/v3.3.0/1 \
     && bash install_dependency.sh gepetto/example-robot-data/v4.1.0/1 \
-    && bash install_dependency.sh loco-3d/crocoddyl/v2.1.0/1 \
+    # Use devel branch to make OpenMP CMake be found by Crocoddyl
+    && bash install_dependency.sh loco-3d/crocoddyl/devel/1 \
     && bash install_dependency.sh machines-in-motion/mim_solvers/devel/1 \
     && bash install_dependency.sh agimus-project/colmpc/main/1 \
     && bash install_dependency.sh humanoid-path-planner/hpp-util/v6.0.0/1 \
@@ -58,7 +57,8 @@ RUN bash install_dependency.sh stack-of-tasks/eigenpy/v3.10.0/1 \
     && bash install_dependency.sh humanoid-path-planner/hpp-environments/v6.0.0/1 \
     && bash install_dependency.sh humanoid-path-planner/hpp-pinocchio/v6.0.0/1 \
     && bash install_dependency.sh humanoid-path-planner/hpp-constraints/v6.0.0/1 \
-    && bash install_dependency.sh Simple-Robotics/proxsuite/devel/1 \
+    # For some reason without `sudo` proxsuite doesn't find nanobind
+    && sudo bash install_dependency.sh Simple-Robotics/proxsuite/devel/1 \
     && bash install_dependency.sh humanoid-path-planner/hpp-core/v6.0.0/1 \
     && bash install_dependency.sh humanoid-path-planner/hpp-corbaserver/v6.0.0/1 \
     && bash install_dependency.sh humanoid-path-planner/hpp-manipulation/v6.0.0/1 \
