@@ -1,14 +1,68 @@
-build:
-  timeout: 7 hours 01 minutes
+.build-common:
+  timeout: 7 hours 0 minutes
   image: docker
   rules:
     # Temporary for coding week
-    # TODO NOT MERGE THIS FILE
-    - if: '$CI_COMMIT_BRANCH == "humble-devel-coding-week-prague"'
+    - if: '$CI_COMMIT_BRANCH == "humble-devel"'
   script:
-    - DATE=$(date -d @1706538067 +"%d-%m-%Y")
-    - docker build -t "${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}-${DATE}"
-      -t "${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}" ./.devcontainer
+    - DATE=$(date -d "${CI_PIPELINE_CREATED_AT:0:10}" +"%d-%m-%Y")
+    # For true base image this will be ignored as a build argument
+    - BASE_IMAGE="${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}-base-${DATE}"
+    - IMAGE_NAME_SHORT="${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}-${IMAGE_NAME}"
+    - IMAGE_NAME_LONG="$IMAGE_NAME_SHORT-${DATE}"
+    - docker build
+        -t "${IMAGE_NAME_SHORT}"
+        -t "${IMAGE_NAME_LONG}"
+        -f "${DOCKER_FILE}"
+        --build-arg AGIMUS_DOCKER_BASE_IMAGE="${BASE_IMAGE}"
+        --build-arg HAPPYPOSE_INSTALL_TYPE="${HAPPYPOSE_INSTALL_TYPE}"
+        "${CONTEXT_PATH}"
     - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
-    - docker push "${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}-${DATE}"
-    - docker push "${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}"
+    - docker push "${IMAGE_NAME_SHORT}"
+    - docker push "${IMAGE_NAME_LONG}"
+  variables:
+    IMAGE_NAME: base
+    DOCKER_FILE: ./.devcontainer/Dockerfile.base
+    CONTEXT_PATH: ./.devcontainer
+    HAPPYPOSE_INSTALL_TYPE: cpu
+
+stages:
+  - base
+  - derived
+
+build-base-image:
+  stage: base
+  extends: .build-common
+  variables:
+    IMAGE_NAME: base
+    DOCKER_FILE: ./.devcontainer/Dockerfile.base
+    CONTEXT_PATH: ./.devcontainer
+
+build-control-image:
+  stage: derived
+  needs: [build-base-image]
+  extends: .build-common
+  variables:
+    IMAGE_NAME: control
+    DOCKER_FILE: ./.devcontainer/control/Dockerfile
+    CONTEXT_PATH: ./.devcontainer/control
+
+.build-vision-image:
+  stage: derived
+  needs: [build-base-image]
+  extends: .build-common
+  variables:
+    IMAGE_NAME: vision
+    DOCKER_FILE: ./.devcontainer/vision/Dockerfile
+    CONTEXT_PATH: ./.devcontainer/vision
+    HAPPYPOSE_INSTALL_TYPE: cpu
+
+build-cpu-vision-image:
+  extends: .build-vision-image
+  variables:
+    HAPPYPOSE_INSTALL_TYPE: cpu
+
+build-cuda-vision-image:
+  extends: .build-vision-image
+  variables:
+    HAPPYPOSE_INSTALL_TYPE: cu124

@@ -1,8 +1,18 @@
-# gepetto-dev-container
+# Agimus devcontainer
 
-Devcontainer setup was initially created for the AGIMUS project.
+Devcontainer setup for the AGIMUS project. It provides a devcontainer for ROS 2 Humble with predefined VS Code plugins and autocompletion for VS Code for C++ and Python, including ROS paths.
 
-This setup provides a devcontainer for ROS 2 Humble with predefined VS Code plugins and autocompletion for VS Code for C++ and Python, including ROS paths.
+ This project consists of 4 prebuilt docker images:
+ - `agimus_dev_container:humble-devel-base`: Common image with all the shared utils preinstalled.
+ - `agimus_dev_container:humble-devel-control`: Image specialized for control and planning part of Agimus experiments. Extends base image with Ignition-Gazebo installation and custom libfranka for interaction with old Panda robot. Additionally it has prebuilt list of dependencies such as [Coal](https://github.com/coal-library/coal), [Pinocchio](https://github.com/stack-of-tasks/pinocchio), [Crocoddyl](https://github.com/loco-3d/crocoddyl) and [HPP](https://humanoid-path-planner.github.io/hpp-doc/) with a set of GUI tools like [Gepetto Viewer](https://github.com/Gepetto/gepetto-viewer). Everything is build with python bindings.
+ - `agimus_dev_container:humble-devel-vision`: Image specialized for vision tasks of Agimus project. Has preinstalled [HappyPose](https://github.com/agimus-project/happypose) (Torch installation for CPU) and [PyM3T](https://github.com/agimus-project/pym3t) with their ROS nodes as well as [olt_ros2_pipeline](https://github.com/agimus-project/olt_ros2_pipeline.git) with dependencies. HappyPose comes with pre-downloaded models and weights for `tless` and `ycbv` datasets.
+ - `agimus_dev_container:humble-devel-vision-cuda`: Image specialized for vision tasks of Agimus project. Consists of the same configuration as `humble-devel-vision` image, but [HappyPose](https://github.com/agimus-project/happypose) is installed with CUDA support.
+
+ To choose between which docker to launch user will be prompted which configuration they want to launch. Available are `control`, `vision` and `vision_cuda`. In order to obtain full pipeline consisting of control and vision modules one has to launch two instances of VS Code. One with devcontainer launched for vision configuration and one with configuration for control.
+
+## Usage
+
+This repository is meant to be used in the same spirit as ROS workspaces. After downloading and launching devcontainer (for more information follow later steps) users can download repositories they wish to work on. When started, docker container creates bind mount between folder `/home/gepetto/ros2_ws/src` and folder of the downloaded repository. This way files within this directory will be accessible from host machine.
 
 ## Install docker and set up VS Code
 
@@ -38,12 +48,17 @@ The last option starts by clicking the green square with arrows in the lower-lef
   </p>
 </div>
 
-Due to user access rights, VS Code will prompt you to type in `sudo` password. This is due to walk-round to have non-root access to `/dev/dri/*` devices to obtain hardware acceleration for GUI applications.
+And then choose the container variant you want to launch.
+
+<div align="center">
+  <img src="./resources/center_choose_container.png" width=500 />
+</div>
 
 ## Additional scripts
 
-Inside the container in the main ROS workspace directory, there are scripts `setup.sh` and `build.sh`. They simplify the pipeline by scripting installation of the dependencies with `rosdep` and run `colcon build` commands.
+Inside of the the docker container in the directory `/home/gepetto/ros2_ws` two utility scripts can be sound.
+[setup.sh](.devcontainer/setup.sh) used to invoke `rosdep install` with some defaults and [build.sh](.devcontainer/build.sh) used to invoke `colcon build`.
 
 ## GPU support for rendering
 
-The dev container automatically sets up access to NVIDIA GPUs. Commands such as `nvidia-smi` are available and work as long as NVIDIA drivers are installed on the host system. For neural network inference everything should be automatic, yet for GUI applications additional variables are required. For more information see [devcontainer.json](./.devcontainer/devcontainer.json) file.
+The dev container automatically sets up access to NVIDIA GPUs. Commands such as `nvidia-smi` are available and work as long as NVIDIA drivers and [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) are installed on the host system. For neural network inference and Gazebo rendering acceleration everything should be automatic.
