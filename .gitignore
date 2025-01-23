@@ -1,3 +1,5 @@
 .devcontainer/*/*
 !.devcontainer/scripts/*.sh
+!.devcontainer/vision/*
+!.devcontainer/control/*
 vcs_repos

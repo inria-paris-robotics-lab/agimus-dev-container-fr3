@@ -3,8 +3,6 @@ FROM osrf/ros:humble-desktop
 SHELL ["/bin/bash", "-c"]
 
 ENV RCUTILS_COLORIZED_OUTPUT=1
-ENV CMAKE_BUILD_TYPE=RelWithDebInfo
-
 
 # Install required packages
 RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
@@ -13,49 +11,54 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     apt-get update \
     && apt-get upgrade -y \
     && apt-get install -qqy --no-install-recommends \
-    # general dependencies
-    bash-completion \
-    build-essential \
-    clang-format \
-    cmake \
-    gdb \
-    git \
-    htop \
-    nano \
-    iputils-ping \
-    net-tools \
-    sudo \
-    wget \
-    vim \
-    # libfranka dependencies
-    libpoco-dev \
-    libeigen3-dev \
-    # python dependencies
-    python-is-python3 \
-    python3-flake8 \
-    python3-pip \
-    python3-setuptools \
-    # ros dependencies
-    ros-$ROS_DISTRO-rmw-fastrtps-cpp \
-    ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
-    ros-$ROS_DISTRO-plotjuggler \
-    ros-$ROS_DISTRO-plotjuggler-ros \
-    ros-dev-tools \
+        # general dependencies
+        bash-completion \
+        build-essential \
+        clang \
+        clang-format \
+        cmake \
+        ninja-build \
+        gdb \
+        git \
+        htop \
+        nano \
+        iputils-ping \
+        net-tools \
+        sudo \
+        wget \
+        vim \
+        unzip \
+        # OpenMP
+        libomp-dev \
+        # python dependencies
+        python-is-python3 \
+        python3-flake8 \
+        python3-pip \
+        python3-setuptools \
+        python-is-python3 \
+        python3-dev \
+        python3-numpy \
+        python3-scipy \
+        # ROS 2 dependencies
+        ros-$ROS_DISTRO-rmw-fastrtps-cpp \
+        ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
+        ros-$ROS_DISTRO-plotjuggler \
+        ros-$ROS_DISTRO-plotjuggler-ros \
+        ros-dev-tools \
     && python -m pip install -U \
-    argcomplete \
-    pre-commit
+        argcomplete \
+        pre-commit
 
-# Add robotpkg dependency
 RUN mkdir -p /etc/apt/keyrings \
     && curl http://robotpkg.openrobots.org/packages/debian/robotpkg.asc \
-        | tee /etc/apt/keyrings/robotpkg.asc \
+    | tee /etc/apt/keyrings/robotpkg.asc \
     && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/robotpkg.asc] http://robotpkg.openrobots.org/packages/debian/pub $(lsb_release -cs) robotpkg" \
-        | tee /etc/apt/sources.list.d/robotpkg.list
+    | tee /etc/apt/sources.list.d/robotpkg.list
 
 ENV PATH=/opt/openrobots/bin:${PATH}
 ENV PKG_CONFIG_PATH=/opt/openrobots/lib/pkgconfig:${PKG_CONFIG_PATH}
 ENV LD_LIBRARY_PATH=/opt/openrobots/lib:${LD_LIBRARY_PATH}
-ENV PYTHONPATH=/opt/openrobots/lib/python3.10/site-packages:${PYTHONPATH}
+ENV PYTHONPATH=/usr/local/lib/python3.10/site-packages:/opt/openrobots/lib/python3.10/site-packages:${PYTHONPATH}
 ENV CMAKE_PREFIX_PATH=/opt/openrobots:${CMAKE_PREFIX_PATH}
 
 # Create the user
@@ -73,9 +76,8 @@ RUN mkdir /commandhistory \
 USER gepetto
 WORKDIR /home/gepetto/ros2_ws
 
+# Change compilation defaults to enable a bit more efficient preserving portability
+ENV CMAKE_BUILD_TYPE=RelWithDebInfo
+ENV CMAKE_CXX_FLAGS="-O3"
+# Set default DDS implementation
 ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
-
-RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /home/gepetto/.bashrc \
-    && echo "source /home/gepetto/ros2_ws/install/setup.bash" >> /home/gepetto/.bashrc \
-    && echo "source /usr/share/ignition/setup.sh" >> /home/gepetto/.bashrc \
-    && echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> /home/gepetto/.bashrc
