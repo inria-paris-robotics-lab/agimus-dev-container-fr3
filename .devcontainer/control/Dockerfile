@@ -57,7 +57,7 @@ RUN bash install_dependency.sh stack-of-tasks/eigenpy/v3.10.0/1 \
     && bash install_dependency.sh humanoid-path-planner/hpp-environments/v6.0.0/1 \
     && bash install_dependency.sh humanoid-path-planner/hpp-pinocchio/v6.0.0/1 \
     && bash install_dependency.sh humanoid-path-planner/hpp-constraints/v6.0.0/1 \
-    # For some reason without `sudo` proxsuite doesn't find nanobind
+    # For some reason without `sudo` ProxSuite doesn't find nanobind
     && sudo bash install_dependency.sh Simple-Robotics/proxsuite/devel/1 \
     && bash install_dependency.sh humanoid-path-planner/hpp-core/v6.0.0/1 \
     && bash install_dependency.sh humanoid-path-planner/hpp-corbaserver/v6.0.0/1 \
@@ -73,7 +73,8 @@ RUN bash install_dependency.sh stack-of-tasks/eigenpy/v3.10.0/1 \
     # Remove folders with meshes and binary data to reduce image size
     && rm -rf example-robot-data \
     && rm -rf pinocchio/models \
-    && rm -rf proxsuite/test/data
+    # ProxSuite files require `sudo` to be removed
+    && sudo rm -rf proxsuite/test/data
 
 ENV PATH=/usr/local/bin:${PATH}
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
