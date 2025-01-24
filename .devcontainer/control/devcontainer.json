@@ -30,7 +30,7 @@
             "target": "/home/gepetto/ros2_ws/setup.sh",
             "type": "bind"
         },
-        // Enable sceen acess
+        // Enable screen access
         {
             "source": "/tmp/.X11-unix",
             "target": "/tmp/.X11-unix",
