@@ -11,6 +11,7 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
         libpoco-dev \
         # ROS 2 dependencies
         ros-$ROS_DISTRO-ros-gz \
+        ros-$ROS_DISTRO-pal-statistics* \
         # Crocoddyl dependencies
         coinor-libipopt-dev \
         libassimp-dev \
