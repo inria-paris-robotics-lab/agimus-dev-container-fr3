@@ -62,3 +62,27 @@ Inside of the the docker container in the directory `/home/gepetto/ros2_ws` two 
 ## GPU support for rendering
 
 The dev container automatically sets up access to NVIDIA GPUs. Commands such as `nvidia-smi` are available and work as long as NVIDIA drivers and [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) are installed on the host system. For neural network inference and Gazebo rendering acceleration everything should be automatic.
+
+
+## Working on miyanoura
+
+Build the images:
+```bash
+docker build \
+  -f ./.devcontainer/Dockerfile.base \
+  --tag gitlab.laas.fr:4567/agimus-project/agimus_dev_container:humble-devel-base-miya \
+  --build-arg CMAKE_BUILD_TYPE=Release \
+  ./.devcontainer
+
+docker build \
+  -f ./.devcontainer/control/Dockerfile \
+  --tag gitlab.laas.fr:4567/agimus-project/agimus_dev_container:humble-devel-control-miya \
+  --build-arg AGIMUS_DOCKER_BASE_IMAGE=gitlab.laas.fr:4567/agimus-project/agimus_dev_container:humble-devel-base-miya \
+  --build-arg nthreads=10 \
+  ./.devcontainer/control
+```
+
+Then you should make sure that you use the docker image
+**gitlab.laas.fr:4567/agimus-project/agimus_dev_container:humble-devel-control-miya**
+and not
+**gitlab.laas.fr:4567/agimus-project/agimus_dev_container:humble-devel-control**.

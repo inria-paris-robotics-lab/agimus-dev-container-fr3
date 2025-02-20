@@ -99,7 +99,7 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     sudo apt-get update \
     && mkdir src \
     # Clone required repositories
-    && git clone --branch humble_devel https://github.com/agimus-project/franka_description.git src/franka_description \
+    && git clone --branch humble-devel https://github.com/agimus-project/franka_description.git src/franka_description \
     # Build packages from source
     && source /opt/ros/$ROS_DISTRO/setup.bash \
     && rosdep update --rosdistro $ROS_DISTRO \

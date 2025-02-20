@@ -1,4 +1,6 @@
 FROM osrf/ros:humble-desktop
+ARG CMAKE_BUILD_TYPE=RelWithDebInfo
+ARG CXX_FLAGS=
 
 SHELL ["/bin/bash", "-c"]
 
@@ -77,7 +79,7 @@ USER gepetto
 WORKDIR /home/gepetto/ros2_ws
 
 # Change compilation defaults to enable a bit more efficient preserving portability
-ENV CMAKE_BUILD_TYPE=RelWithDebInfo
-ENV CMAKE_CXX_FLAGS="-O3"
+ENV CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+ENV CXXFLAGS=${CXX_FLAGS}
 # Set default DDS implementation
 ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
