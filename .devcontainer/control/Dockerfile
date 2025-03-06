@@ -85,7 +85,7 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     # Clone required repositories
     && git clone -b humble --recursive https://github.com/agimus-project/libfranka.git src/libfranka \
     && git clone -b humble-devel https://github.com/agimus-project/franka_description.git src/franka_description \
-    && git clone -b humble https://github.com/agimus-project/franka_ros2.git src/franka_ros2 \ 
+    && git clone -b humble https://github.com/agimus-project/franka_ros2.git src/franka_ros2 \
     # Build packages from source
     && source /opt/ros/$ROS_DISTRO/setup.bash \
     && rosdep update --rosdistro $ROS_DISTRO \
