@@ -90,6 +90,10 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     && source /opt/ros/$ROS_DISTRO/setup.bash \
     && rosdep update --rosdistro $ROS_DISTRO \
     && rosdep install -y -i --from-paths src --rosdistro $ROS_DISTRO \
+        --skip-keys eigenpy \
+        --skip-keys hpp-fcl \
+        --skip-keys coal \
+        --skip-keys pinocchio \
     && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF \
     # Remove unused folders
     && rm -rf build log src
