@@ -86,3 +86,8 @@ Then you should make sure that you use the docker image
 **gitlab.laas.fr:4567/agimus-project/agimus_dev_container:humble-devel-control-miya**
 and not
 **gitlab.laas.fr:4567/agimus-project/agimus_dev_container:humble-devel-control**.
+
+
+## Real time Docker image
+
+Alongside dev-container this repository holds docker image for real time control `agimus_dev_container:humble-devel-realtime-control` to accompany the development image. This image is meant to container only minimal dependencies used by Panda robot and Linear Feedback Controller. It is meant to be launched in parallel with the developement container in cases where auxiliary computer for control is available.

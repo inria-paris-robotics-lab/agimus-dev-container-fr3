@@ -1,0 +1,58 @@
+FROM ros:humble-ros-core
+
+SHELL ["/bin/bash", "-c"]
+
+WORKDIR /ros2_ws
+
+RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
+    --mount=type=cache,sharing=locked,target=/var/lib/apt \
+    --mount=type=cache,sharing=locked,target=/root/.cache \
+    apt-get update \
+    && apt-get install -qqy --no-install-recommends ros-dev-tools \
+    && git clone -b humble --depth 1 https://github.com/loco-3d/linear-feedback-controller.git src/linear-feedback-controller \
+    && git clone -b humble-devel --depth 1 https://github.com/loco-3d/linear-feedback-controller-msgs.git src/linear-feedback-controller-msgs \
+    && git clone -b humble --recursive --depth 1 https://github.com/agimus-project/libfranka.git src/libfranka \
+    && git clone -b humble --depth 1 https://github.com/agimus-project/franka_ros2.git src/franka_ros2 \
+    && git clone -b humble-devel --depth 1 https://github.com/agimus-project/agimus-demos.git src/agimus-demos \
+    # Remove folders with demos to only keep basic dependencies. rosdep does not respect COLCON_IGNORE
+    && mv src/agimus-demos/agimus_demos_common src \
+    && rm -rf src/agimus-demos \
+    && mv src/franka_ros2/franka_hardware src \
+    && mv src/franka_ros2/franka_gripper src \
+    && mv src/franka_ros2/franka_msgs src \
+    && mv src/franka_ros2/franka_semantic_components src \
+    && mv src/franka_ros2/franka_example_controllers src \
+    && rm -rf src/franka_ros2 \
+    # Install dependencies
+    && rosdep init \
+    && rosdep update --rosdistro $ROS_DISTRO \
+    && rosdep install --from-paths src -y -i \
+        --skip-keys eigenpy \
+        --skip-keys franka_description \
+        --skip-keys franka_ign_ros2_control \
+        --skip-keys franka_robot_state_broadcaster \
+        --skip-keys hpp-fcl \
+        --skip-keys robot_state_publisher \
+        --skip-keys ros_gz_bridge \
+        --skip-keys ros_gz_sim \
+        --skip-keys rviz2 \
+        --skip-keys xacro \
+        --dependency-types build \
+        --dependency-types buildtool \
+        --dependency-types exec \
+    && source /opt/ros/$ROS_DISTRO/setup.bash \
+    # Build only required set of dependencies and install everything in system workspace
+    && colcon build \
+        --packages-up-to agimus_demos_common \
+        --cmake-args \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_TESTING=OFF \
+            -DBUILD_TESTS=OFF \
+            -DBUILD_EXAMPLES=OFF \
+    # Size optimization
+    && rm -rf build log src \
+    && export SUDO_FORCE_REMOVE=yes \
+    && apt-get purge -y ros-dev-tools \
+    && apt-get autoremove -y
+
+RUN sed -i "s|/opt/ros/\$ROS_DISTRO/setup.bash|/ros2_ws/install/setup.bash|g" /ros_entrypoint.sh

@@ -2,13 +2,13 @@
   timeout: 7 hours 0 minutes
   image: docker
   rules:
-    # Temporary for coding week
     - if: '$CI_COMMIT_BRANCH == "humble-devel"'
   script:
     - DATE=$(date -d "${CI_PIPELINE_CREATED_AT:0:10}" +"%d-%m-%Y")
     # For true base image this will be ignored as a build argument
-    - BASE_IMAGE="${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}-base-${DATE}"
-    - IMAGE_NAME_SHORT="${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}-${IMAGE_NAME}"
+    - export BRANCH_NAME=$(echo ${CI_COMMIT_BRANCH} | tr "/" -)
+    - BASE_IMAGE="${CI_REGISTRY_IMAGE}:${BRANCH_NAME}-base-${DATE}"
+    - IMAGE_NAME_SHORT="${CI_REGISTRY_IMAGE}:${BRANCH_NAME}-${IMAGE_NAME}"
     - IMAGE_NAME_LONG="$IMAGE_NAME_SHORT-${DATE}"
     - docker build
         -t "${IMAGE_NAME_SHORT}"
@@ -29,6 +29,7 @@
 stages:
   - base
   - derived
+
 
 build-base-image:
   stage: base
@@ -68,3 +69,11 @@ build-cuda-vision-image:
   variables:
     IMAGE_NAME: vision-cuda
     HAPPYPOSE_INSTALL_TYPE: cu124
+
+build-realtime-control-image:
+  stage: base
+  extends: .build-common
+  variables:
+    IMAGE_NAME: realtime-control
+    DOCKER_FILE: ./.devcontainer/Dockerfile.realtime
+    CONTEXT_PATH: ./.devcontainer
