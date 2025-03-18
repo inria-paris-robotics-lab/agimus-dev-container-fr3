@@ -8,8 +8,6 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     --mount=type=cache,sharing=locked,target=/root/.cache \
     sudo apt-get update \
     && sudo apt-get install -qqy --no-install-recommends \
-        # libfranka dependencies
-        libpoco-dev \
         # ROS 2 dependencies
         ros-$ROS_DISTRO-ros-gz \
         ros-$ROS_DISTRO-pal-statistics* \
@@ -34,13 +32,6 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
         robotpkg-qpoases \
         robotpkg-qt5-osgqt \
         robotpkg-qt5-qgv
-
-# Build libfranka
-RUN git clone -b humble --recursive https://github.com/agimus-project/libfranka.git \
-    && cmake -B build -S libfranka -DBUILD_TESTS=OFF \
-    && cmake --build build \
-    && sudo cmake --install build \
-    && rm -rf libfranka build
 
 # Install all dependencies up to Crocoddyl system-wise
 WORKDIR /home/gepetto/dependencies
@@ -92,21 +83,18 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     sudo apt-get update \
     && mkdir src \
     # Clone required repositories
-    && git clone --branch humble-devel https://github.com/agimus-project/franka_description.git src/franka_description \
-    && git clone --branch v0.1.15 https://github.com/agimus-project/franka_ros2.git src/franka_ros2 \
-    # Remplace new libfranka version with old one
-    && find src/franka_ros2 -type f -name 'CMakeLists.txt' | xargs sed -i 's/find_package(Franka 0.13.* REQUIRED)/find_package(Franka 0.9.3 REQUIRED)/' \
+    && git clone -b humble --recursive https://github.com/agimus-project/libfranka.git src/libfranka \
+    && git clone -b humble-devel https://github.com/agimus-project/franka_description.git src/franka_description \
+    && git clone -b humble https://github.com/agimus-project/franka_ros2.git src/franka_ros2 \
     # Build packages from source
     && source /opt/ros/$ROS_DISTRO/setup.bash \
     && rosdep update --rosdistro $ROS_DISTRO \
     && rosdep install -y -i --from-paths src --rosdistro $ROS_DISTRO \
-        --skip-keys libfranka \
         --skip-keys eigenpy \
         --skip-keys hpp-fcl \
         --skip-keys coal \
         --skip-keys pinocchio \
-        --skip-keys crocoddyl \
-    && colcon build \
+    && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF \
     # Remove unused folders
     && rm -rf build log src
 
@@ -116,5 +104,4 @@ WORKDIR /home/gepetto/ros2_ws
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /home/gepetto/.bashrc \
     && echo "source /home/gepetto/franka_deps_ws/install/setup.bash" >> /home/gepetto/.bashrc \
     && echo "source /home/gepetto/ros2_ws/install/setup.bash" >> /home/gepetto/.bashrc \
-    && echo "source /usr/share/ignition/setup.sh" >> /home/gepetto/.bashrc \
     && echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> /home/gepetto/.bashrc

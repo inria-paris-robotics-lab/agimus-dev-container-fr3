@@ -12,7 +12,7 @@ PRJ="${split[1]}"
 TAG="${split[2]}"
 CORES="${split[3]}"
 
-git clone --branch "$TAG" --recursive "https://github.com/$ORG/$PRJ"
+git clone --branch "$TAG" --recursive --depth 1 "https://github.com/$ORG/$PRJ"
 cmake -B "$PRJ/build" -S "$PRJ" \
     -DPYTHON_EXECUTABLE=/usr/bin/python3 \
     -DPYTHON_SITELIB=/usr/local/lib/python3.10/site-packages \
@@ -36,6 +36,4 @@ cmake -B "$PRJ/build" -S "$PRJ" \
     -Wno-dev
 cmake --build "$PRJ/build" -j $CORES
 sudo cmake --build "$PRJ/build" -t install
-# Removing those files reduces size of the docker by 1.2 Gb
-# This makes it is worth the sacrifice of git history
-sudo rm -rf "$PRJ/build" "$PRJ/cmake" "$PRJ/.git"
+sudo rm -rf "$PRJ/build" "$PRJ/cmake"
