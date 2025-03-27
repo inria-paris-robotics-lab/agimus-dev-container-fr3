@@ -36,13 +36,13 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
 # Install all dependencies up to Crocoddyl system-wise
 WORKDIR /home/gepetto/dependencies
 ADD install_dependency.sh /home/gepetto/dependencies/install_dependency.sh
-RUN bash install_dependency.sh stack-of-tasks/eigenpy/v3.10.0/${nthreads} \
-    && bash install_dependency.sh coal-library/coal/v3.0.0/${nthreads} \
-    && bash install_dependency.sh stack-of-tasks/pinocchio/v3.3.0/${nthreads} \
-    && bash install_dependency.sh gepetto/example-robot-data/v4.1.0/${nthreads} \
+RUN bash install_dependency.sh stack-of-tasks/eigenpy/v3.10.2/${nthreads} \
+    && bash install_dependency.sh coal-library/coal/v3.0.1/${nthreads} \
+    && bash install_dependency.sh stack-of-tasks/pinocchio/v3.4.0/${nthreads} \
+    && bash install_dependency.sh gepetto/example-robot-data/v4.3.0/${nthreads} \
     # Use devel branch to make OpenMP CMake be found by Crocoddyl
-    && bash install_dependency.sh loco-3d/crocoddyl/devel/${nthreads} \
-    && bash install_dependency.sh machines-in-motion/mim_solvers/devel/${nthreads} \
+    && bash install_dependency.sh loco-3d/crocoddyl/v3.0.1/${nthreads} \
+    && bash install_dependency.sh machines-in-motion/mim_solvers/v0.1.0/${nthreads} \
     && bash install_dependency.sh agimus-project/colmpc/main/${nthreads} \
     && bash install_dependency.sh humanoid-path-planner/hpp-util/v6.0.0/${nthreads} \
     && bash install_dependency.sh humanoid-path-planner/hpp-template-corba/v6.0.0/${nthreads} \
@@ -76,24 +76,48 @@ ENV CMAKE_PREFIX_PATH=/usr/local:${CMAKE_PREFIX_PATH}
 ENV AMENT_PREFIX_PATH=/usr/local
 
 # Install ROS dependencies for Franka ROS
-WORKDIR /home/gepetto/franka_deps_ws
+WORKDIR /home/gepetto/agimus_deps_ws
 RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     --mount=type=cache,sharing=locked,target=/var/lib/apt \
     --mount=type=cache,sharing=locked,target=/root/.cache \
     sudo apt-get update \
     && mkdir src \
     # Clone required repositories
-    && git clone -b humble --recursive https://github.com/agimus-project/libfranka.git src/libfranka \
-    && git clone -b humble-devel https://github.com/agimus-project/franka_description.git src/franka_description \
-    && git clone -b humble https://github.com/agimus-project/franka_ros2.git src/franka_ros2 \
+    && git clone --branch humble-devel --depth 1 https://github.com/agimus-project/agimus-demos.git src/agimus-demos \
+    && vcs import --shallow --recursive src < src/agimus-demos/franka.repos \
+    && vcs import --shallow --recursive src < src/agimus-demos/agimus_dev.repos \
     # Build packages from source
     && source /opt/ros/$ROS_DISTRO/setup.bash \
     && rosdep update --rosdistro $ROS_DISTRO \
-    && rosdep install -y -i --from-paths src --rosdistro $ROS_DISTRO \
+    && rosdep install -y -i \
+        --from-paths src \
+        --rosdistro $ROS_DISTRO \
+        --skip-keys libfranka \
         --skip-keys eigenpy \
         --skip-keys hpp-fcl \
         --skip-keys coal \
         --skip-keys pinocchio \
+        --skip-keys crocoddyl \
+        --skip-keys mim_solvers \
+        --skip-keys colmpc \
+        --skip-keys hpp-util \
+        --skip-keys hpp-template \
+        --skip-keys hpp-statistics \
+        --skip-keys hpp-environments \
+        --skip-keys hpp-pinocchio \
+        --skip-keys hpp-constraints \
+        --skip-keys proxsuite \
+        --skip-keys hpp-core \
+        --skip-keys hpp-corbaserver \
+        --skip-keys hpp-manipulation \
+        --skip-keys hpp-manipulation \
+        --skip-keys hpp-manipulation \
+        --skip-keys gepetto-viewer \
+        --skip-keys gepetto-viewer \
+        --skip-keys hpp-gepetto \
+        --skip-keys hpp-plot \
+        --skip-keys hpp-gui \
+        --skip-keys hpp-bin-picking \
     && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF \
     # Remove unused folders
     && rm -rf build log src
@@ -102,6 +126,6 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
 WORKDIR /home/gepetto/ros2_ws
 
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /home/gepetto/.bashrc \
-    && echo "source /home/gepetto/franka_deps_ws/install/setup.bash" >> /home/gepetto/.bashrc \
+    && echo "source /home/gepetto/agimus_deps_ws/install/setup.bash" >> /home/gepetto/.bashrc \
     && echo "source /home/gepetto/ros2_ws/install/setup.bash" >> /home/gepetto/.bashrc \
     && echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> /home/gepetto/.bashrc
