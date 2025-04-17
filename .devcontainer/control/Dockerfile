@@ -32,6 +32,8 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
         robotpkg-qpoases \
         robotpkg-qt5-osgqt \
         robotpkg-qt5-qgv
+        # killall
+        psmisc
 
 # Install all dependencies up to Crocoddyl system-wise
 WORKDIR /home/gepetto/dependencies
