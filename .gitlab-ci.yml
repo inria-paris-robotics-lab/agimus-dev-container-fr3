@@ -3,7 +3,6 @@
   image: docker
   rules:
     - if: '$CI_COMMIT_BRANCH == "humble-devel"'
-    - if: '$CI_COMMIT_BRANCH == "bugfix/update-dependencies"'
   script:
     - DATE=$(date -d "${CI_PIPELINE_CREATED_AT:0:10}" +"%d-%m-%Y")
     # For true base image this will be ignored as a build argument
