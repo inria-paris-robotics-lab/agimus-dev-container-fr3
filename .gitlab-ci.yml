@@ -3,6 +3,7 @@
   image: docker
   rules:
     - if: '$CI_COMMIT_BRANCH == "humble-devel"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
   script:
     - DATE=$(date -d "${CI_PIPELINE_CREATED_AT:0:10}" +"%d-%m-%Y")
     # For true base image this will be ignored as a build argument
