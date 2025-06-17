@@ -7,6 +7,7 @@
     // },
     "image": "gitlab.laas.fr:4567/agimus-project/agimus_dev_container:humble-devel-control",
     "initializeCommand": "xhost +local:docker",
+    "postCreateCommand": "sudo chmod a+w /commandhistory/.bash_history",
     "containerEnv": {
         "DISPLAY": "${localEnv:DISPLAY}",
         "QT_X11_NO_MITSHM": "1",
