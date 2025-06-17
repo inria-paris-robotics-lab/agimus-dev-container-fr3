@@ -4,3 +4,4 @@
 !.devcontainer/vision_cuda/*
 !.devcontainer/control/*
 vcs_repos
+*
