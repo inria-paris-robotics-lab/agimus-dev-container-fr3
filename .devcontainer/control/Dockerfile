@@ -31,7 +31,7 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
         robotpkg-py310-omniorbpy \
         robotpkg-qpoases \
         robotpkg-qt5-osgqt \
-        robotpkg-qt5-qgv
+        robotpkg-qt5-qgv \
         # killall
         psmisc
 
