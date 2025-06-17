@@ -11,16 +11,22 @@
     - BASE_IMAGE="${CI_REGISTRY_IMAGE}:${BRANCH_NAME}-base-${DATE}"
     - IMAGE_NAME_SHORT="${CI_REGISTRY_IMAGE}:${BRANCH_NAME}-${IMAGE_NAME}"
     - IMAGE_NAME_LONG="$IMAGE_NAME_SHORT-${DATE}"
-    - docker build
-        -t "${IMAGE_NAME_SHORT}"
-        -t "${IMAGE_NAME_LONG}"
-        -f "${DOCKER_FILE}"
-        --build-arg AGIMUS_DOCKER_BASE_IMAGE="${BASE_IMAGE}"
-        --build-arg HAPPYPOSE_INSTALL_TYPE="${HAPPYPOSE_INSTALL_TYPE}"
+    - docker build \
+        -t "${IMAGE_NAME_SHORT}" \
+        -t "${IMAGE_NAME_LONG}" \
+        -f "${DOCKER_FILE}" \
+        --build-arg AGIMUS_DOCKER_BASE_IMAGE="${BASE_IMAGE}" \
+        --build-arg HAPPYPOSE_INSTALL_TYPE="${HAPPYPOSE_INSTALL_TYPE}" \
         "${CONTEXT_PATH}"
-    - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
-    - docker push "${IMAGE_NAME_SHORT}"
-    - docker push "${IMAGE_NAME_LONG}"
+    - |
+      if [ "$CI_COMMIT_BRANCH" = "humble-devel" ]; then
+        echo "Pushing Docker images..."
+        docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
+        docker push "${IMAGE_NAME_SHORT}"
+        docker push "${IMAGE_NAME_LONG}"
+      else
+        echo "Skipping Docker push as this is not the humble-devel branch."
+      fi
   variables:
     IMAGE_NAME: base
     DOCKER_FILE: ./.devcontainer/Dockerfile.base
@@ -30,7 +36,6 @@
 stages:
   - base
   - derived
-
 
 build-base-image:
   stage: base
