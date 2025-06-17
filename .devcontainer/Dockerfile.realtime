@@ -9,8 +9,8 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     --mount=type=cache,sharing=locked,target=/root/.cache \
     apt-get update \
     && apt-get install -qqy --no-install-recommends ros-dev-tools \
-    && git clone -b humble --depth 1 https://github.com/loco-3d/linear-feedback-controller.git src/linear-feedback-controller \
-    && git clone -b humble-devel --depth 1 https://github.com/loco-3d/linear-feedback-controller-msgs.git src/linear-feedback-controller-msgs \
+    && git clone -b v2.0.0 --depth 1 https://github.com/loco-3d/linear-feedback-controller.git src/linear-feedback-controller \
+    && git clone -b v1.0.0 --depth 1 https://github.com/loco-3d/linear-feedback-controller-msgs.git src/linear-feedback-controller-msgs \
     && git clone -b humble --recursive --depth 1 https://github.com/agimus-project/libfranka.git src/libfranka \
     && git clone -b humble --depth 1 https://github.com/agimus-project/franka_ros2.git src/franka_ros2 \
     && git clone -b humble-devel --depth 1 https://github.com/agimus-project/agimus-demos.git src/agimus-demos \

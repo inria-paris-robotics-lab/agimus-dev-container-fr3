@@ -45,7 +45,6 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
         ros-$ROS_DISTRO-rmw-fastrtps-cpp \
         ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
         ros-$ROS_DISTRO-plotjuggler \
-        ros-$ROS_DISTRO-plotjuggler-ros \
         ros-dev-tools \
     && python -m pip install -U \
         argcomplete \
