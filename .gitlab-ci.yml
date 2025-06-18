@@ -59,13 +59,13 @@ cleanup-docker-images:
     - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
     - |
       for IMAGE_NAME in base control vision vision-cuda realtime-control; do
-        IMAGE_NAME_SHORT="${CI_REGISTRY_IMAGE}:${BRANCH_NAME}-${IMAGE_NAME}";
-        IMAGE_NAME_LONG="${IMAGE_NAME_SHORT}-${DATE}";
-        BASE_IMAGE="${CI_REGISTRY_IMAGE}:${BRANCH_NAME}-base-${DATE}";
-        echo "Removing images: $IMAGE_NAME_SHORT, $IMAGE_NAME_LONG, $BASE_IMAGE";
-        docker rmi "${IMAGE_NAME_SHORT}" || true;
-        docker rmi "${IMAGE_NAME_LONG}" || true;
-        docker rmi "${BASE_IMAGE}" || true;
+        IMAGE_NAME_SHORT="${CI_REGISTRY_IMAGE}:${BRANCH_NAME}-${IMAGE_NAME}" &&
+        IMAGE_NAME_LONG="${IMAGE_NAME_SHORT}-${DATE}" &&
+        BASE_IMAGE="${CI_REGISTRY_IMAGE}:${BRANCH_NAME}-base-${DATE}" &&
+        echo "Removing images: $IMAGE_NAME_SHORT, $IMAGE_NAME_LONG, $BASE_IMAGE" &&
+        docker rmi "${IMAGE_NAME_SHORT}" || true &&
+        docker rmi "${IMAGE_NAME_LONG}" || true &&
+        docker rmi "${BASE_IMAGE}" || true &&
       done
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
