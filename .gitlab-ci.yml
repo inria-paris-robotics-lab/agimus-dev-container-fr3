@@ -1,12 +1,12 @@
-.build-common:
-  timeout: 7 hours 0 minutes
-  image: docker
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "humble-devel"'
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+stages:
+  - base
+  - derived
+  - cleanup
+
+# Factorized script for defining image variables
+.define-image-variables:
   script:
-    - DATE=$(date -d "${CI_PIPELINE_CREATED_AT:0:10}" +"%d-%m-%Y")
-    # For true base image this will be ignored as a build argument
+    - DATE="pr-build"
     - |
       if [ "$CI_PIPELINE_SOURCE" = "merge_request_event" ]; then
         # Use the source branch of the merge request
@@ -14,6 +14,7 @@
       else
         # Use the current branch for pushes
         export BRANCH_NAME=$(echo ${CI_COMMIT_BRANCH} | tr "/" -)
+        DATE=$(date -d "${CI_PIPELINE_CREATED_AT:0:10}" +"%d-%m-%Y")
       fi
     - BASE_IMAGE="${CI_REGISTRY_IMAGE}:${BRANCH_NAME}-base-${DATE}"
     - IMAGE_NAME_SHORT="${CI_REGISTRY_IMAGE}:${BRANCH_NAME}-${IMAGE_NAME}"
@@ -23,31 +24,56 @@
     - echo "BASE_IMAGE = ${BASE_IMAGE}"
     - echo "IMAGE_NAME_SHORT = ${IMAGE_NAME_SHORT}"
     - echo "IMAGE_NAME_LONG = ${IMAGE_NAME_LONG}"
-    - docker build
-        -t "${IMAGE_NAME_SHORT}"
-        -t "${IMAGE_NAME_LONG}"
-        -f "${DOCKER_FILE}"
-        --build-arg AGIMUS_DOCKER_BASE_IMAGE="${BASE_IMAGE}"
-        --build-arg HAPPYPOSE_INSTALL_TYPE="${HAPPYPOSE_INSTALL_TYPE}"
-        "${CONTEXT_PATH}"
-    - |
-      if [ "$CI_COMMIT_BRANCH" = "humble-devel" ]; then
-        echo "Pushing Docker images..."
-        docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
-        docker push "${IMAGE_NAME_SHORT}"
-        docker push "${IMAGE_NAME_LONG}"
-      else
-        echo "Skipping Docker push as this is not the humble-devel branch."
-      fi
-  variables:
-    IMAGE_NAME: base
-    DOCKER_FILE: ./.devcontainer/Dockerfile.base
-    CONTEXT_PATH: ./.devcontainer
-    HAPPYPOSE_INSTALL_TYPE: cpu
 
-stages:
-  - base
-  - derived
+.build-common:
+  timeout: 7 hours 0 minutes
+  image: docker
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "humble-devel"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  script:
+    - !reference [.define-image-variables, script]
+    - docker build \
+        -t "${IMAGE_NAME_SHORT}" \
+        -t "${IMAGE_NAME_LONG}" \
+        -f "${DOCKER_FILE}" \
+        --build-arg AGIMUS_DOCKER_BASE_IMAGE="${BASE_IMAGE}" \
+        --build-arg HAPPYPOSE_INSTALL_TYPE="${HAPPYPOSE_INSTALL_TYPE}" \
+        "${CONTEXT_PATH}"
+    - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
+    - docker push "${IMAGE_NAME_SHORT}"
+    - docker push "${IMAGE_NAME_LONG}"
+
+cleanup-docker-images:
+  stage: cleanup
+  image: docker
+  script:
+    - DATE="pr-build"
+    - |
+      if [ "$CI_PIPELINE_SOURCE" = "merge_request_event" ]; then
+        # Use the source branch of the merge request
+        export BRANCH_NAME=$(echo ${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME} | tr "/" -)
+      else
+        # Use the current branch for pushes
+        export BRANCH_NAME=$(echo ${CI_COMMIT_BRANCH} | tr "/" -)
+        DATE=$(date -d "${CI_PIPELINE_CREATED_AT:0:10}" +"%d-%m-%Y")
+      fi
+    - echo "Cleaning up Docker images for branch: $BRANCH_NAME"
+    - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
+    - |
+      for IMAGE_NAME in base control vision vision-cuda realtime-control; do
+        IMAGE_NAME_SHORT="${CI_REGISTRY_IMAGE}:${BRANCH_NAME}-${IMAGE_NAME}"
+        IMAGE_NAME_LONG="${IMAGE_NAME_SHORT}-${DATE}"
+        BASE_IMAGE="${CI_REGISTRY_IMAGE}:${BRANCH_NAME}-base-${DATE}"
+        echo "Removing images: $IMAGE_NAME_SHORT, $IMAGE_NAME_LONG, $BASE_IMAGE"
+        docker rmi "${IMAGE_NAME_SHORT}" || true
+        docker rmi "${IMAGE_NAME_LONG}" || true
+        docker rmi "${BASE_IMAGE}" || true
+      done
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: always
+  allow_failure: true
 
 build-base-image:
   stage: base
