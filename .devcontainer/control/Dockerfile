@@ -33,7 +33,10 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
         robotpkg-qt5-osgqt \
         robotpkg-qt5-qgv \
         # killall
-        psmisc
+        psmisc \
+        # Install the dependency of the ft sensor
+        libasio-dev \
+        libcurlpp-dev
 
 # Install all dependencies up to Crocoddyl system-wise
 WORKDIR /home/gepetto/dependencies
@@ -65,6 +68,8 @@ RUN bash install_dependency.sh stack-of-tasks/eigenpy/v3.10.2/${nthreads} \
     && bash install_dependency.sh humanoid-path-planner/hpp-plot/v6.0.0/${nthreads} \
     && bash install_dependency.sh humanoid-path-planner/hpp-gui/v6.0.0/${nthreads} \
     && bash install_dependency.sh florent-lamiraux/hpp-bin-picking/devel/${nthreads} \
+    # Install the force sensor driver
+    && bash install_dependency.sh gbartyzel/ros2_net_ft_driver/rolling/${nthreads} \
     # Remove folders with meshes and binary data to reduce image size
     && rm -rf example-robot-data \
     && rm -rf pinocchio/models \
