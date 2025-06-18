@@ -11,6 +11,11 @@
     - BASE_IMAGE="${CI_REGISTRY_IMAGE}:${BRANCH_NAME}-base-${DATE}"
     - IMAGE_NAME_SHORT="${CI_REGISTRY_IMAGE}:${BRANCH_NAME}-${IMAGE_NAME}"
     - IMAGE_NAME_LONG="$IMAGE_NAME_SHORT-${DATE}"
+    - echo "Building Docker image with the following parameters:"
+    - echo "BRANCH_NAME = ${BRANCH_NAME}"
+    - echo "BASE_IMAGE = ${BASE_IMAGE}"
+    - echo "IMAGE_NAME_SHORT = ${IMAGE_NAME_SHORT}"
+    - echo "IMAGE_NAME_LONG = ${IMAGE_NAME_LONG}"
     - docker build
         -t "${IMAGE_NAME_SHORT}"
         -t "${IMAGE_NAME_LONG}"
