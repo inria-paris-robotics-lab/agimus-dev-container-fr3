@@ -97,8 +97,8 @@ build-realtime-control-image:
   image: docker
   script:
     - !reference [.define-image-variables, script]
-    - echo "Cleaning up Docker images for branch: $BRANCH_NAME"
-    - echo "Removing images: $IMAGE_NAME_SHORT, $IMAGE_NAME_LONG, $BASE_IMAGE"
+    - echo "Cleaning up Docker images for branch= $BRANCH_NAME"
+    - echo "Removing images= $IMAGE_NAME_SHORT, $IMAGE_NAME_LONG, $BASE_IMAGE"
     - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
     - docker rmi "${IMAGE_NAME_SHORT}" || true
     - docker rmi "${IMAGE_NAME_LONG}" || true
