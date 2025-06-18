@@ -33,12 +33,12 @@ stages:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
   script:
     - !reference [.define-image-variables, script]
-    - docker build \
-        -t "${IMAGE_NAME_SHORT}" \
-        -t "${IMAGE_NAME_LONG}" \
-        -f "${DOCKER_FILE}" \
-        --build-arg AGIMUS_DOCKER_BASE_IMAGE="${BASE_IMAGE}" \
-        --build-arg HAPPYPOSE_INSTALL_TYPE="${HAPPYPOSE_INSTALL_TYPE}" \
+    - docker build
+        -t "${IMAGE_NAME_SHORT}"
+        -t "${IMAGE_NAME_LONG}"
+        -f "${DOCKER_FILE}"
+        --build-arg AGIMUS_DOCKER_BASE_IMAGE="${BASE_IMAGE}"
+        --build-arg HAPPYPOSE_INSTALL_TYPE="${HAPPYPOSE_INSTALL_TYPE}"
         "${CONTEXT_PATH}"
     - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
     - docker push "${IMAGE_NAME_SHORT}"
