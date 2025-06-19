@@ -7,14 +7,19 @@
     // },
     "image": "gitlab.laas.fr:4567/agimus-project/agimus_dev_container:humble-devel-control",
     "initializeCommand": "xhost +local:docker",
+    "postCreateCommand": "sudo chmod a+w /commandhistory/.bash_history",
     "containerEnv": {
         "DISPLAY": "${localEnv:DISPLAY}",
         "QT_X11_NO_MITSHM": "1",
+        // Handling ssh connection.
+        "SSH_AUTH_SOCK": "/run/user/${localEnv:LOCAL_USER_ID}/keyring/ssh",
         // NVIDIA related ENV variables make no difference
         // in case no discrete GPU is present in the system
         "NVIDIA_DRIVER_CAPABILITIES": "all",
         "__NV_PRIME_RENDER_OFFLOAD": "1",
-        "__GLX_VENDOR_LIBRARY_NAME": "nvidia"
+        "__GLX_VENDOR_LIBRARY_NAME": "nvidia",
+        // Use ccache
+        "CCACHE_DIR": "/ccache"
     },
     "remoteUser": "gepetto",
     "privileged": true,
@@ -46,6 +51,12 @@
             "source": "${localWorkspaceFolderBasename}-bashhistory",
             "target": "/commandhistory",
             "type": "volume"
+        },
+		// ccache.
+        {
+            "source": "/ccache",
+            "target": "/ccache",
+            "type": "bind"
         }
 
     ],

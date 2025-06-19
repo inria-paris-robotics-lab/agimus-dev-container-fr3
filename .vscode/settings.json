@@ -29,4 +29,7 @@
     "**/install": true,
     "**/log": true
   },
+
+  "terminal.integrated.fontSize": 16,
+  "terminal.integrated.scrollback": 1000000000000
 }
