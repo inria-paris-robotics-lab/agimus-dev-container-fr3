@@ -1,6 +1,6 @@
 ARG AGIMUS_DOCKER_BASE_IMAGE=gitlab.laas.fr:4567/agimus-project/agimus_dev_container:humble-devel-base
 FROM $AGIMUS_DOCKER_BASE_IMAGE
-ARG nthreads=6
+ARG nthreads=1
 
 # Install required packages
 RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
@@ -88,7 +88,6 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     sudo apt-get update \
     && mkdir src \
     # Clone required repositories
-    && git clone --branch humble-devel --depth 1 https://github.com/gbartyzel/ros2_net_ft_driver src/vcs_ft_sensor/ros2_net_ft_driver \
     && git clone --branch humble-devel --depth 1 https://github.com/agimus-project/agimus-demos.git src/agimus-demos \
     && vcs import --shallow --recursive src < src/agimus-demos/franka.repos \
     && vcs import --shallow --recursive src < src/agimus-demos/agimus_dev.repos \
