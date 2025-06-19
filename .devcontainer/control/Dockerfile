@@ -1,6 +1,6 @@
 ARG AGIMUS_DOCKER_BASE_IMAGE=gitlab.laas.fr:4567/agimus-project/agimus_dev_container:humble-devel-base
 FROM $AGIMUS_DOCKER_BASE_IMAGE
-ARG nthreads=1
+ARG nthreads=6
 
 # Install required packages
 RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
@@ -68,8 +68,6 @@ RUN bash install_dependency.sh stack-of-tasks/eigenpy/v3.10.2/${nthreads} \
     && bash install_dependency.sh humanoid-path-planner/hpp-plot/v6.0.0/${nthreads} \
     && bash install_dependency.sh humanoid-path-planner/hpp-gui/v6.0.0/${nthreads} \
     && bash install_dependency.sh florent-lamiraux/hpp-bin-picking/devel/${nthreads} \
-    # Install the force sensor driver
-    && bash install_dependency.sh gbartyzel/ros2_net_ft_driver/rolling/${nthreads} \
     # Remove folders with meshes and binary data to reduce image size
     && rm -rf example-robot-data \
     && rm -rf pinocchio/models \
@@ -90,6 +88,7 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     sudo apt-get update \
     && mkdir src \
     # Clone required repositories
+    && git clone --branch humble-devel --depth 1 https://github.com/gbartyzel/ros2_net_ft_driver src/vcs_ft_sensor/ros2_net_ft_driver \
     && git clone --branch humble-devel --depth 1 https://github.com/agimus-project/agimus-demos.git src/agimus-demos \
     && vcs import --shallow --recursive src < src/agimus-demos/franka.repos \
     && vcs import --shallow --recursive src < src/agimus-demos/agimus_dev.repos \
