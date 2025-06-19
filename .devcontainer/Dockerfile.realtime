@@ -14,6 +14,7 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     && git clone -b humble --recursive --depth 1 https://github.com/agimus-project/libfranka.git src/libfranka \
     && git clone -b humble --depth 1 https://github.com/agimus-project/franka_ros2.git src/franka_ros2 \
     && git clone -b humble-devel --depth 1 https://github.com/agimus-project/agimus-demos.git src/agimus-demos \
+    && git clone -b dz/fix-rdt-rate --depth 1 https://github.com/Pliant-Energy/ros2_net_ft_driver.git src/ros2_net_ft_driver \
     # Remove folders with demos to only keep basic dependencies. rosdep does not respect COLCON_IGNORE
     && mv src/agimus-demos/agimus_demos_common src \
     && rm -rf src/agimus-demos \
@@ -23,6 +24,11 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     && mv src/franka_ros2/franka_semantic_components src \
     && mv src/franka_ros2/franka_example_controllers src \
     && rm -rf src/franka_ros2 \
+    && mv src/ros2_net_ft_driver/net_ft_diagnostic_broadcaster src \
+    && mv src/ros2_net_ft_driver/net_ft_driver src \
+    && rm -rf ros2_net_ft_driver \
+    # Install dependencies that are not yet in pacakge.xml
+    && apt install -y libasio-dev libcurlpp-dev ros-$ROS_DISTRO-force-torque-sensor-broadcaster \
     # Install dependencies
     && rosdep init \
     && rosdep update --rosdistro $ROS_DISTRO \
