@@ -34,6 +34,7 @@ stages:
   script:
     - !reference [.define-image-variables, script]
     - docker build
+        --pull
         -t "${IMAGE_NAME_SHORT}"
         -t "${IMAGE_NAME_LONG}"
         -f "${DOCKER_FILE}"
