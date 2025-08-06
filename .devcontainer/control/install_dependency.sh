@@ -34,7 +34,7 @@ cmake -B "$PRJ/build" -S "$PRJ" \
     -DUSE_QPOASES=OFF \
     -DBUILD_WITH_MULTITHREADS=ON \
     -DBUILD_WITH_VECTORIZATION_SUPPORT=ON \
-    -Wno-dev
-cmake --build "$PRJ/build" -j $CORES
-sudo cmake --build "$PRJ/build" -t install > /home/gepetto/dependencies/log/$PRJ.log 2>&1
+    -Wno-dev > /home/gepetto/dependencies/log/$PRJ.cmake.log 2>&1
+cmake --build "$PRJ/build" -j $CORES > /home/gepetto/dependencies/log/$PRJ.build.log 2>&1
+sudo cmake --build "$PRJ/build" -t install > /home/gepetto/dependencies/log/$PRJ.install.log 2>&1
 sudo rm -rf "$PRJ/build" "$PRJ/cmake"
