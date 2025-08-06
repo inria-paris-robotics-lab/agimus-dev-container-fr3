@@ -36,6 +36,9 @@
     80,
     100
   ],
-  "ROS2.rosSetupScript": "home/gepetto/ros2_ws/agimus_deps_ws/install/setup.bash",
+  "ROS2.rosSetupScript": "/home/gepetto/ros2_ws/agimus_deps_ws/install/setup.bash",
   "ros.distro": "humble",
+
+  "terminal.integrated.fontSize": 16,
+  "terminal.integrated.scrollback": 1000000000000
 }
