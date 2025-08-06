@@ -123,7 +123,7 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
         --skip-keys hpp-plot \
         --skip-keys hpp-gui \
         --skip-keys hpp-bin-picking \
-    && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF \
+    && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF > colcon_build.log 2>&1 \
     # Remove unused folders
     && rm -rf build log src
 
