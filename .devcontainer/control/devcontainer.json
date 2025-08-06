@@ -54,7 +54,7 @@
         },
 		// ccache.
         {
-            "source": "/ccache",
+            "source": "${localWorkspaceFolder}/ccache",
             "target": "/ccache",
             "type": "bind"
         }
