@@ -11,6 +11,8 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
         # ROS 2 dependencies
         ros-$ROS_DISTRO-ros-gz \
         ros-$ROS_DISTRO-pal-statistics* \
+        # Jrl-cmake dependencies
+        doxygen \
         # Crocoddyl dependencies
         coinor-libipopt-dev \
         libassimp-dev \
@@ -115,9 +117,6 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
         --skip-keys hpp-core \
         --skip-keys hpp-corbaserver \
         --skip-keys hpp-manipulation \
-        --skip-keys hpp-manipulation \
-        --skip-keys hpp-manipulation \
-        --skip-keys gepetto-viewer \
         --skip-keys gepetto-viewer \
         --skip-keys hpp-gepetto \
         --skip-keys hpp-plot \
