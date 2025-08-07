@@ -6,7 +6,7 @@
     //     "context": "."
     // },
     "image": "gitlab.laas.fr:4567/agimus-project/agimus_dev_container:humble-devel-control",
-    "initializeCommand": "xhost +local:docker",
+    "initializeCommand": "docker pull gitlab.laas.fr:4567/agimus-project/agimus_dev_container:humble-devel-control && xhost +local:docker",
     "postCreateCommand": "sudo chmod a+w /commandhistory/.bash_history",
     "containerEnv": {
         "DISPLAY": "${localEnv:DISPLAY}",
@@ -54,7 +54,7 @@
         },
 		// ccache.
         {
-            "source": "/ccache",
+            "source": "${localWorkspaceFolder}/ccache",
             "target": "/ccache",
             "type": "bind"
         }
@@ -93,7 +93,9 @@
                 "xaver.clang-format",
                 "njpwerner.autodocstring",
                 "cschlosser.doxdocgen",
-                "streetsidesoftware.code-spell-checker"
+                "streetsidesoftware.code-spell-checker",
+                "Ranch-Hand-Robotics.rde-ros-2",
+                "Ranch-Hand-Robotics.urdf-editor"
             ]
         }
     }

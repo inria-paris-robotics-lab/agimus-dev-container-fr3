@@ -12,6 +12,7 @@ PRJ="${split[1]}"
 TAG="${split[2]}"
 CORES="${split[3]}"
 
+mkdir -p /home/gepetto/dependencies/log
 git clone --branch "$TAG" --recursive --depth 1 "https://github.com/$ORG/$PRJ"
 cmake -B "$PRJ/build" -S "$PRJ" \
     -DPYTHON_EXECUTABLE=/usr/bin/python3 \
@@ -33,7 +34,7 @@ cmake -B "$PRJ/build" -S "$PRJ" \
     -DUSE_QPOASES=OFF \
     -DBUILD_WITH_MULTITHREADS=ON \
     -DBUILD_WITH_VECTORIZATION_SUPPORT=ON \
-    -Wno-dev
-cmake --build "$PRJ/build" -j $CORES
-sudo cmake --build "$PRJ/build" -t install
+    -Wno-dev > /home/gepetto/dependencies/log/$PRJ.cmake.log 2>&1
+cmake --build "$PRJ/build" -j $CORES > /home/gepetto/dependencies/log/$PRJ.build.log 2>&1
+sudo cmake --build "$PRJ/build" -t install > /home/gepetto/dependencies/log/$PRJ.install.log 2>&1
 sudo rm -rf "$PRJ/build" "$PRJ/cmake"

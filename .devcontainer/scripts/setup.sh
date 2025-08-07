@@ -33,4 +33,18 @@ rosdep install -y -i \
         --skip-keys hpp-gepetto-viewer \
         --skip-keys hpp-plot \
         --skip-keys hpp-gui \
-        --skip-keys hpp-bin-picking
+        --skip-keys hpp-bin-picking \
+        --skip-keys sea_state_broadcaster \
+        --skip-keys allegro_hand_description \
+        --skip-keys allegro_hand_controller_configuration \
+        --skip-keys collision_aware_joint_trajectory_wrapper \
+        --skip-keys sea_transmissions \
+        --skip-keys realsense_simulation \
+        --skip-keys tiago_pro_head_description \
+        --skip-keys tiago_pro_bringup \
+        --skip-keys omni_drive_controller \
+        --skip-keys allegro_hand_system \
+        --skip-keys pal_sea_arm_controller_configuration \
+        --skip-keys pal_sea_arm_description \
+        --skip-keys tiago_pro_description \
+        --skip-keys tiago_pro_controller_configuration
