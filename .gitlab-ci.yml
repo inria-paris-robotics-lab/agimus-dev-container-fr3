@@ -26,7 +26,7 @@ stages:
     - echo "IMAGE_NAME_LONG = ${IMAGE_NAME_LONG}"
 
 .build-common:
-  timeout: 7 hours 0 minutes
+  timeout: 15 hours 0 minutes
   image: docker
   rules:
     - if: '$CI_COMMIT_BRANCH == "humble-devel"'
