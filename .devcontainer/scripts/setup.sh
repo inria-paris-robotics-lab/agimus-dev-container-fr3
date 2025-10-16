@@ -8,6 +8,7 @@ rosdep update --rosdistro $ROS_DISTRO
 rosdep install -y -i \
     --from-paths src \
         --rosdistro $ROS_DISTRO \
+        --skip-keys libfranka \
         --skip-keys eigenpy \
         --skip-keys hpp-fcl \
         --skip-keys coal \
