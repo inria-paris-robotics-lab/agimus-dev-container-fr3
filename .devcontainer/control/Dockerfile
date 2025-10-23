@@ -57,9 +57,9 @@ RUN bash install_dependency.sh stack-of-tasks/eigenpy/v3.10.2/${nthreads} \
     && bash install_dependency.sh gepetto/example-robot-data/v4.3.0/${nthreads} \
     # Use devel branch to make OpenMP CMake be found by Crocoddyl
     && bash install_dependency.sh loco-3d/crocoddyl/v3.0.1/${nthreads} \
-    && bash install_dependency.sh machines-in-motion/mim_solvers/v0.1.0/${nthreads} \
+    && bash install_dependency.sh machines-in-motion/mim_solvers/v0.1.1/${nthreads} \
     && bash install_dependency.sh machines-in-motion/force_feedback_mpc/main/${nthreads} \
-    && bash install_dependency.sh agimus-project/colmpc/main/${nthreads} \
+    && bash install_dependency.sh agimus-project/colmpc/v0.3.0/${nthreads} \
     && bash install_dependency.sh humanoid-path-planner/hpp-util/v6.0.0/${nthreads} \
     && bash install_dependency.sh humanoid-path-planner/hpp-template-corba/v6.0.0/${nthreads} \
     && bash install_dependency.sh humanoid-path-planner/hpp-statistics/v6.0.0/${nthreads} \
