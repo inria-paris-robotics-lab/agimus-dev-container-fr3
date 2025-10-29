@@ -30,6 +30,13 @@
               pkgs.cudaPackages.cudatoolkit
               self'.packages.vscode
             ];
+            # This contain coreutils and a 'id' binary not configured for LDAP,
+            # so at LAAS, vscode 'id -u -n' fails
+            shellHook = ''
+              mkdir -p .nix-override-bin
+              ln -sf /usr/bin/id .nix-override-bin/id
+              export PATH="$PWD/.nix-override-bin:$PATH"
+            '';
           };
           packages = {
             vscode = pkgs.vscode-with-extensions.override {
