@@ -91,3 +91,15 @@ and not
 ## Real time Docker image
 
 Alongside dev-container this repository holds docker image for real time control `agimus_dev_container:humble-devel-realtime-control` to accompany the development image. This image is meant to container only minimal dependencies used by Panda robot and Linear Feedback Controller. It is meant to be launched in parallel with the developement container in cases where auxiliary computer for control is available.
+
+## Demo compose.yaml
+
+Demos can be run standalone without use of VSC and dev cotnainers. All that is required is access to docker on a machine. File [compose.yaml](./compose.yaml) contains minimal subset of privileges to run CPU-only demos. To launch the docker go to the directory where this repository is downloaded and run
+```bash
+docker compose up
+```
+Afterwards run
+```
+docker container exec -it agimus-demos-container bash
+```
+to log in to a bash shell to run demos. All the dependencies are prebuilt inside of the docker and there should be no need to rebuild packages internally in the running docker as long as they are not outdated. To launch demo simply run `ros2 launch agimus_demo<numer and name> bringup.launch`. Everything should be already preinstalled.
