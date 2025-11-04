@@ -9,12 +9,12 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     --mount=type=cache,sharing=locked,target=/root/.cache \
     apt-get update \
     && apt-get install -qqy --no-install-recommends ros-dev-tools \
-    && git clone -b v2.0.0 --depth 1 https://github.com/loco-3d/linear-feedback-controller.git src/linear-feedback-controller \
-    && git clone -b v1.0.0 --depth 1 https://github.com/loco-3d/linear-feedback-controller-msgs.git src/linear-feedback-controller-msgs \
+    && git clone -b v3.0.0 --depth 1 https://github.com/loco-3d/linear-feedback-controller.git src/linear-feedback-controller \
+    && git clone -b v1.1.0 --depth 1 https://github.com/loco-3d/linear-feedback-controller-msgs.git src/linear-feedback-controller-msgs \
     && git clone -b humble --recursive --depth 1 https://github.com/agimus-project/libfranka.git src/libfranka \
     && git clone -b humble --depth 1 https://github.com/agimus-project/franka_ros2.git src/franka_ros2 \
     && git clone -b humble-devel --depth 1 https://github.com/agimus-project/agimus-demos.git src/agimus-demos \
-    && git clone -b dz/fix-rdt-rate --depth 1 https://github.com/Pliant-Energy/ros2_net_ft_driver.git src/ros2_net_ft_driver \
+    && git clone -b rolling --depth 1 https://github.com/gbartyzel/ros2_net_ft_driver src/ros2_net_ft_driver \
     # Remove folders with demos to only keep basic dependencies. rosdep does not respect COLCON_IGNORE
     && mv src/agimus-demos/agimus_demos_common src \
     && rm -rf src/agimus-demos \
@@ -27,8 +27,6 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     && mv src/ros2_net_ft_driver/net_ft_diagnostic_broadcaster src \
     && mv src/ros2_net_ft_driver/net_ft_driver src \
     && rm -rf ros2_net_ft_driver \
-    # Install dependencies that are not yet in pacakge.xml
-    && apt install -y libasio-dev libcurlpp-dev ros-$ROS_DISTRO-force-torque-sensor-broadcaster \
     # Install dependencies
     && rosdep init \
     && rosdep update --rosdistro $ROS_DISTRO \

@@ -34,11 +34,19 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
         robotpkg-qpoases \
         robotpkg-qt5-osgqt \
         robotpkg-qt5-qgv \
+        # Crocoddyl cost plotter dependencies
+        python3-grpcio \
+        libgrpc++-dev \
+        protobuf-compiler-grpc \
+        qt6-base-dev \
+        grpc-proto \
         # killall
         psmisc \
         # Install the dependency of the ft sensor
         libasio-dev \
-        libcurlpp-dev
+        libcurlpp-dev \
+    && python -m pip install -U \
+        grpcio-tools
 
 # Install all dependencies up to Crocoddyl system-wise
 WORKDIR /home/gepetto/dependencies
@@ -49,8 +57,9 @@ RUN bash install_dependency.sh stack-of-tasks/eigenpy/v3.10.2/${nthreads} \
     && bash install_dependency.sh gepetto/example-robot-data/v4.3.0/${nthreads} \
     # Use devel branch to make OpenMP CMake be found by Crocoddyl
     && bash install_dependency.sh loco-3d/crocoddyl/v3.0.1/${nthreads} \
-    && bash install_dependency.sh machines-in-motion/mim_solvers/v0.1.0/${nthreads} \
-    && bash install_dependency.sh agimus-project/colmpc/main/${nthreads} \
+    && bash install_dependency.sh machines-in-motion/mim_solvers/v0.1.1/${nthreads} \
+    && bash install_dependency.sh machines-in-motion/force_feedback_mpc/main/${nthreads} \
+    && bash install_dependency.sh agimus-project/colmpc/v0.3.0/${nthreads} \
     && bash install_dependency.sh humanoid-path-planner/hpp-util/v6.0.0/${nthreads} \
     && bash install_dependency.sh humanoid-path-planner/hpp-template-corba/v6.0.0/${nthreads} \
     && bash install_dependency.sh humanoid-path-planner/hpp-statistics/v6.0.0/${nthreads} \
@@ -70,6 +79,8 @@ RUN bash install_dependency.sh stack-of-tasks/eigenpy/v3.10.2/${nthreads} \
     && bash install_dependency.sh humanoid-path-planner/hpp-plot/v6.0.0/${nthreads} \
     && bash install_dependency.sh humanoid-path-planner/hpp-gui/v6.0.0/${nthreads} \
     && bash install_dependency.sh florent-lamiraux/hpp-bin-picking/devel/${nthreads} \
+    # Crocoddyl cost plotter
+    && bash install_dependency.sh MaximilienNaveau/crocoddyl_plotter/main/${nthreads} \
     # Remove folders with meshes and binary data to reduce image size
     && rm -rf example-robot-data \
     && rm -rf pinocchio/models \
