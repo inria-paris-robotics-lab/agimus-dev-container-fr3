@@ -53,6 +53,8 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
             -DBUILD_TESTING=OFF \
             -DBUILD_TESTS=OFF \
             -DBUILD_EXAMPLES=OFF \
+            -DBUILD_DOCUMENTATION=OFF \
+            -DINSTALL_DOCUMENTATION=OFF \
     # Size optimization
     && rm -rf build log src \
     && export SUDO_FORCE_REMOVE=yes \
