@@ -53,7 +53,9 @@
     "workspaceMount": "source=${localWorkspaceFolder},target=/home/gepetto/ros2_ws/src,type=bind,consistency=cached",
     "runArgs": [
         "--ipc=host",
-        "--net=host"
+        "--net=host",
+        "--device-cgroup-rule", "c 81:* rmw",
+        "--device-cgroup-rule", "c 198:* rmw"
     ],
     "hostRequirements": {
         "gpu": "optional"
