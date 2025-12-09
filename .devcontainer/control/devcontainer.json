@@ -79,7 +79,10 @@
                         "path": "bash"
                     }
                 },
-                "terminal.integrated.defaultProfile.linux": "bash"
+                "terminal.integrated.defaultProfile.linux": "bash",
+                // Disable automatic port forwarding
+                "remote.autoForwardPorts": false,
+                "remote.restoreForwardedPorts": false
             },
             "extensions": [
                 "ms-vscode.cpptools-extension-pack",
