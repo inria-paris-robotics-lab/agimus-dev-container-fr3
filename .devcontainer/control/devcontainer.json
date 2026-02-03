@@ -5,7 +5,7 @@
     //     "dockerfile": "Dockerfile",
     //     "context": "."
     // },
-    "image": "gitlab.laas.fr:4567/agimus-project/agimus_dev_container:humble-devel-control",
+    "image": "agimus-control-fr3:latest",
     "initializeCommand": "xhost +local:docker",
     "postCreateCommand": "sudo chmod a+w /commandhistory/.bash_history",
     "containerEnv": {
@@ -59,8 +59,9 @@
             "type": "bind"
         }
 
-    ],
-    "workspaceFolder": "/home/gepetto/ros2_ws/src",
+    ]
+    ,
+    "workspaceFolder": "/home/gepetto/ros2_ws/",
     "workspaceMount": "source=${localWorkspaceFolder},target=/home/gepetto/ros2_ws/src,type=bind,consistency=cached",
     "runArgs": [
         "--ipc=host",
