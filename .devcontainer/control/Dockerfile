@@ -1,6 +1,6 @@
-ARG AGIMUS_DOCKER_BASE_IMAGE=gitlab.laas.fr:4567/agimus-project/agimus_dev_container:humble-devel-base
+ARG AGIMUS_DOCKER_BASE_IMAGE=agimus-base:latest
 FROM $AGIMUS_DOCKER_BASE_IMAGE
-ARG nthreads=1
+ARG nthreads=32
 
 # Install required packages
 RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
@@ -46,7 +46,8 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
         libasio-dev \
         libcurlpp-dev \
     && python -m pip install -U \
-        grpcio-tools
+        grpcio-tools \
+        ipython
 
 # Install all dependencies up to Crocoddyl system-wise
 WORKDIR /home/gepetto/dependencies
@@ -55,10 +56,12 @@ RUN bash install_dependency.sh stack-of-tasks/eigenpy/v3.10.2/${nthreads} \
     && bash install_dependency.sh coal-library/coal/v3.0.1/${nthreads} \
     && bash install_dependency.sh stack-of-tasks/pinocchio/v3.4.0/${nthreads} \
     && bash install_dependency.sh gepetto/example-robot-data/v4.3.0/${nthreads} \
+    && bash install_dependency.sh microsoft/mimalloc/v3.2.7/${nthreads} \
+    && bash install_dependency.sh Simple-Robotics/aligator/v0.18.0/${nthreads} \
     # Use devel branch to make OpenMP CMake be found by Crocoddyl
     && bash install_dependency.sh loco-3d/crocoddyl/v3.0.1/${nthreads} \
     && bash install_dependency.sh machines-in-motion/mim_solvers/v0.1.1/${nthreads} \
-    && bash install_dependency.sh machines-in-motion/force_feedback_mpc/main/${nthreads} \
+    # && bash install_dependency.sh machines-in-motion/force_feedback_mpc/main/{nthreads} 
     && bash install_dependency.sh agimus-project/colmpc/v0.3.0/${nthreads} \
     && bash install_dependency.sh humanoid-path-planner/hpp-util/v6.0.0/${nthreads} \
     && bash install_dependency.sh humanoid-path-planner/hpp-template-corba/v6.0.0/${nthreads} \
@@ -101,16 +104,20 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     sudo apt-get update \
     && mkdir src \
     # Clone required repositories
-    && git clone --branch humble-devel --depth 1 https://github.com/agimus-project/agimus-demos.git src/agimus-demos \
+    && git clone --branch aligator_mpc --depth 1 https://github.com/LouiseMsn/agimus-demos.git src/agimus-demos \
+    && git clone --branch 0.15.0 --recurse-submodules https://github.com/frankarobotics/libfranka.git src/libfranka \
     && vcs import --shallow --recursive src < src/agimus-demos/franka.repos \
     && vcs import --shallow --recursive src < src/agimus-demos/agimus_dev.repos \
+    # remove agimus-demos before resolving deps
+    && rm -rf src/agimus-demos \
     # Build packages from source
     && source /opt/ros/$ROS_DISTRO/setup.bash \
     && rosdep update --rosdistro $ROS_DISTRO \
     && rosdep install -y -i \
         --from-paths src \
         --rosdistro $ROS_DISTRO \
-        --skip-keys libfranka \
+        # replaced libfranka by agimus-demos
+        --skip-keys agimus-demos \ 
         --skip-keys eigenpy \
         --skip-keys hpp-fcl \
         --skip-keys coal \
