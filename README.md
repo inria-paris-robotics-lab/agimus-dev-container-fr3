@@ -23,6 +23,12 @@ If you have NVIDIA GPU and want to use it withing the container install [NVIDIA 
 
 And finally install the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension in your VS Code.
 
+## Pull the docker image
+The docker image is stored in the "Packages" section of inria-paris-robotics-lab's github organization
+```bash
+docker pull ghcr.io/inria-paris-robotics-lab/agimus-control-fr3:latest
+```
+
 ## Start the devcontainer
 
 You can start the dev container in several ways.
