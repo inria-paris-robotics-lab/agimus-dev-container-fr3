@@ -5,7 +5,7 @@
     //     "dockerfile": "Dockerfile",
     //     "context": "."
     // },
-    "image": "ghcr.io/inria-paris-robotics-lab/agimus-control-fr3:latest ",
+    "image": "ghcr.io/inria-paris-robotics-lab/agimus-control-fr3:latest",
     "initializeCommand": "xhost +local:docker",
     "postCreateCommand": "sudo chmod a+w /commandhistory/.bash_history",
     "containerEnv": {

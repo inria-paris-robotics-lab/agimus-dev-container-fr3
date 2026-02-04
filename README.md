@@ -39,6 +39,10 @@ The simplest option is automatic. VS Code will show you, in the lower-right corn
   <img src="./resources/bottom_right_img.png" width=500 />
 </div>
 
+> [!WARNING]  
+> If your devcontainer extension version is lower than 0.431.1. then build phase may hang.  
+> You can hit Ctrl + Shift + P and type 'reload Window'   
+
 The second option is by pressing `F1` and typing `Dev Containers` and selecting `Rebuild and Reopen in Container...` if you want to restart it or `Attach to Running Container...` if you would like to log it to as already started container.
 
 <div align="center">
