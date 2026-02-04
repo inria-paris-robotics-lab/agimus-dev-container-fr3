@@ -46,6 +46,7 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
         libasio-dev \
         libcurlpp-dev \
     && python -m pip install -U \
+        ipython \
         grpcio-tools
 
 # Install all dependencies up to Crocoddyl system-wise
