@@ -61,8 +61,8 @@
 
     ]
     ,
-    "workspaceFolder": "/home/gepetto/ros2_ws/",
-    "workspaceMount": "source=${localWorkspaceFolder},target=/home/gepetto/ros2_ws/src,type=bind,consistency=cached",
+    "workspaceFolder": "/home/gepetto/ros2_ws",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/gepetto/ros2_ws,type=bind,consistency=cached",
     "runArgs": [
         "--ipc=host",
         "--net=host",
