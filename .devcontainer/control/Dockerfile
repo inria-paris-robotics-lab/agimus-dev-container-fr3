@@ -46,8 +46,8 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
         libasio-dev \
         libcurlpp-dev \
     && python -m pip install -U \
-        grpcio-tools \
-        ipython
+        ipython \
+        grpcio-tools
 
 # Install all dependencies up to Crocoddyl system-wise
 WORKDIR /home/gepetto/dependencies
