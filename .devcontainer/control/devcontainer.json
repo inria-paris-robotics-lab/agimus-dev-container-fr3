@@ -67,7 +67,8 @@
         "--ipc=host",
         "--net=host",
         "--device-cgroup-rule", "c 81:* rmw",
-        "--device-cgroup-rule", "c 198:* rmw"
+        "--device-cgroup-rule", "c 198:* rmw",
+        "--ulimit", "core=0"
     ],
     "hostRequirements": {
         "gpu": "optional"
